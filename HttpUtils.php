@@ -60,6 +60,24 @@ class HttpUrl {
 		return $this->rawUrl;
 	}
 	
+	public function setQuery($query) {
+		if (is_array($query)) {
+			$this->query = $query;
+		} elseif ($query) {
+			$parts = explode('&', $query);
+			$this->query = array();
+			foreach($parts as $part) {
+				list($key, $value) = explode('=', $part, 2);
+				$this->query[$key] = $value;
+			}
+		}
+		$this->_createUrl();
+	}
+	
+	public function getQuery() {
+		return $this->query;
+	}
+	
 
 	protected function _updateUrlParts($urlParts) {
 		//print_r($urlParts);
@@ -73,10 +91,11 @@ class HttpUrl {
 			$this->port     = $urlParts['port'];
 		}
 		$this->path     = $urlParts['path'];
-		$this->query    = $urlParts['query'];
 		$this->fragment = $urlParts['fragment'];
+		
+		$this->setQuery($urlParts['query']);
 	}
-
+	
 	protected function _createUrl() {
 		$parts = array($this->scheme, '://');
 		
@@ -96,8 +115,23 @@ class HttpUrl {
 		
 		$parts[] = $this->path;
 		
-		if ($this->query) {
-			$parts[] = '?' . $this->query;
+		if (!empty($this->query)) {
+			$query = array();
+			$isSingle = (count($this->query)==1);
+			foreach($this->query as $key=>$value) {
+				if ($key) {
+					if ($value) {
+						$query[] = "$key=$value";
+					} else {
+						$query[] = $key;
+						if ($isSingle) {
+							$query[] = '=';
+						}
+					}
+				}
+			}
+			$parts[] = '?';
+			$parts[] = implode('&', $query);
 		}
 		
 		if ($this->fragment) {

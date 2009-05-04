@@ -106,6 +106,22 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$url3 = $this->httpUrl->getUrl();
 		$this->assertEquals($expected, $url3);
 	}
+	
+	function testQueryString() {
+		$qs = array(
+			'key1' => 'value1',
+			'key2' => 'value2'
+		);
+		
+		$url = 'http://www.example.com/';
+		$this->httpUrl->setUrl($url);	
+		$this->assertEquals($url, $this->httpUrl->getUrl());
+
+		$this->httpUrl->setQuery($qs);
+		$expected = 'http://www.example.com/?key1=value1&key2=value2';
+		$url2     = $this->httpUrl->getUrl();
+		$this->assertEquals($url2, $expected);
+	}
 }
 
 
