@@ -1,0 +1,8 @@
+
+# Ignore editing backups
+*~
+
+# Ignore config file
+config.php
+
+
