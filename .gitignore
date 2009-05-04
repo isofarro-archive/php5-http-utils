@@ -5,4 +5,7 @@
 # Ignore config file
 config.php
 
+# Ignore data stores
+data/*.ser
+
 
