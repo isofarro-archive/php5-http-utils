@@ -57,13 +57,54 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals($this->httpUrl->getUrl(), $url);
 		
-		$url2 = '/newPath/newFile.html';
+		$url2     = '/newPath/newFile.html';
 		$expected = 'http://www.example.com/newPath/newFile.html';
 		$this->httpUrl->setUrl($url2);	
 
 		$url3 = $this->httpUrl->getUrl();
 		$this->assertEquals($expected, $url3);
+	}
+	
+	function testSetRelativeUrl() {
+		$url = 'http://www.example.com/path/to/file.html';
+		$this->httpUrl->setUrl($url);	
 
+		$this->assertEquals($this->httpUrl->getUrl(), $url);
+		
+		$url2     = 'newFile.html';
+		$expected = 'http://www.example.com/path/to/newFile.html';
+		$this->httpUrl->setRelativeUrl($url2);	
+	
+		$url3 = $this->httpUrl->getUrl();
+		$this->assertEquals($expected, $url3);
+	}
+
+	function testSetRelativeUrl2() {
+		$url = 'http://www.example.com/path/to/file.html';
+		$this->httpUrl->setUrl($url);	
+
+		$this->assertEquals($this->httpUrl->getUrl(), $url);
+		
+		$url2     = '/newFile.html';
+		$expected = 'http://www.example.com/newFile.html';
+		$this->httpUrl->setRelativeUrl($url2);	
+	
+		$url3 = $this->httpUrl->getUrl();
+		$this->assertEquals($expected, $url3);
+	}
+
+	function testSetRelativeUrl3() {
+		$url = 'http://www.example.com/';
+		$this->httpUrl->setUrl($url);	
+
+		$this->assertEquals($this->httpUrl->getUrl(), $url);
+		
+		$url2     = 'newFile.html';
+		$expected = 'http://www.example.com/newFile.html';
+		$this->httpUrl->setRelativeUrl($url2);	
+	
+		$url3 = $this->httpUrl->getUrl();
+		$this->assertEquals($expected, $url3);
 	}
 }
 

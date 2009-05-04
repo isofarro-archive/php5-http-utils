@@ -33,7 +33,23 @@ class HttpUrl {
 	}
 	
 	public function setRelativeUrl($url) {
-
+		$urlParts = parse_url($url);
+		if ($urlParts['path']) {
+			if ($urlParts['path'][0]=='/') {
+				// An absolute path
+				$this->path = $urlParts['path'];
+				$this->_createUrl();
+			} else {
+				// A relative path
+				$basename = basename($this->path);
+				$path = dirname($this->path); // . '/';
+				if ($basename) {
+					$path .= '/';
+				}				
+				$this->path = $path . $urlParts['path'];
+				$this->_createUrl();
+			}
+		}
 	}
 	
 	public function getUrl() {
