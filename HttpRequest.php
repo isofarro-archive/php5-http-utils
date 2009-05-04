@@ -20,26 +20,13 @@ class HttpRequest {
 	}
 	
 	public function setUrl($url) {
-		$this->url       = $url;
-		$this->urlParts  = parse_url($url);
-		$this->_updateUrlParts();
+		$this->url = new HttpUrl($url);
 	}
 	
 	public function getUrl() {
-		return $this->url;
+		return $this->url->getUrl();
 	}
 
-
-	/**
-	* _updateUrlParts: updates the various pieces of a request
-	* affected by a change of url
-	**/
-	protected function _updateUrlParts() {
-		// TODO: update Path
-		// TODO: update Host header
-		// TODO: update query string	
-	}
-	
 }
 
 
