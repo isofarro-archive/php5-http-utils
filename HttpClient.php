@@ -8,6 +8,10 @@ class HttpClient {
 	protected $client;
 
 
+	public function getUrl($url) {
+		$request = new HttpRequest($url);
+	}
+
 
 
 }

@@ -3,13 +3,14 @@
 require_once '../HttpClient.php';
 
 class HttpClientTests extends PHPUnit_Framework_TestCase {
+	var $http;
 
 	public function setUp() {
-	
+		$this->http = new HttpClient();
 	}
 	
 	public function tearDown() {
-	
+		$this->http = NULL;
 	}
 	
 	public function testInitHttpClient() {
@@ -17,6 +18,15 @@ class HttpClientTests extends PHPUnit_Framework_TestCase {
 	
 	}
 
+
+	public function testSimpleGet() {
+		$url = 'http://yahoo.com/';
+		
+		$response = $this->http->getUrl($url);
+		$this->assertNotNull($response);
+		$this->assertTrue(is_string($response));
+		
+	}
 }
 
 ?>
