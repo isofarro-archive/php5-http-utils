@@ -64,17 +64,20 @@ class HttpUrl {
 		if (is_array($query)) {
 			$this->query = $query;
 		} elseif ($query) {
-			$parts = explode('&', $query);
 			$this->query = array();
-			foreach($parts as $part) {
-				//echo "QS-Part:{$part}\n";
-				if (strpos($part, '=')!==false) {
-					list($key, $value) = explode('=', $part, 2);
-					$this->query[$key] = $value;
-				} else {
-					//echo "ERROR:{$part} Doesn't contain =\n";
-					$this->query[$part] = '';
-				}
+			$this->_processQueryString($query);
+		}
+		$this->_createUrl();
+	}
+	
+	public function addQuery($query, $value=false) {
+		if (is_array($query)) {
+			echo "WARN: addQuery[] isn't implemented.\n";
+		} elseif(is_string($query)) {
+			if ($value!==false) {
+				$this->query[$query] = $value;
+			} else {
+				$this->_processQueryString($query);
 			}
 		}
 		$this->_createUrl();
@@ -149,6 +152,21 @@ class HttpUrl {
 		
 		$this->url = implode('', $parts);
 	}
+	
+	protected function _processQueryString($query) {
+		$parts = explode('&', $query);
+		foreach($parts as $part) {
+			//echo "QS-Part:{$part}\n";
+			if (strpos($part, '=')!==false) {
+				list($key, $value) = explode('=', $part, 2);
+				$this->query[$key] = $value;
+			} else {
+				//echo "ERROR:{$part} Doesn't contain =\n";
+				$this->query[$part] = '';
+			}
+		}
+	}
+	
 }
 
 ?>

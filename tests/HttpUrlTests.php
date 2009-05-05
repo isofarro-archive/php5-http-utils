@@ -19,6 +19,7 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$url = new HttpUrl();
 		$this->assertNotNull($url);	
 	}
+
 	
 	function testSetUrl() {
 		$url = 'http://user:password@example.org:8080/path/file.php?key1=val1&key2=val2#place';
@@ -35,6 +36,7 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$this->assertType('string', $url3);
 		$this->assertEquals($url, $url3);
 	}
+
 
 	function testSetUrl2() {
 		$url = 'http://example.org/path/file.php?key1=val1';
@@ -62,8 +64,8 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$this->httpUrl->setQuery($qs);
 
 		$query = $this->httpUrl->getQuery();
-		print_r($query);
-		//$this->assertContains();
+		$this->assertArrayHasKey('HomePage', $query);
+		$this->assertEquals('', $query['HomePage']);
 
 		$url2 = $this->httpUrl->getUrl();
 		$this->assertNotNull($url2);
@@ -74,14 +76,61 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$this->httpUrl->setQuery($qs);
 
 		$query = $this->httpUrl->getQuery();
-		//print_r($query);
+		$this->assertArrayHasKey('page', $query);
+		$this->assertEquals('HomePage', $query['page']);
 
 		$url3 = $this->httpUrl->getUrl();
 		$this->assertNotNull($url3);
 		$this->assertEquals($expected, $url3);
-	
-	
 	}
+
+
+	function testAddQueryString1() {
+		$url = 'http://example.org/index.php?page=HomePage';
+		$this->httpUrl->setUrl($url);
+
+		$query = $this->httpUrl->getQuery();
+		$this->assertArrayHasKey('page', $query);
+		$this->assertEquals('HomePage', $query['page']);
+
+		// Now add a new query string
+		$this->httpUrl->addQuery('var2=key2');
+		$query2 = $this->httpUrl->getQuery();
+		$this->assertArrayHasKey('var2', $query2);
+		$this->assertEquals('key2', $query2['var2']);
+		$this->assertArrayHasKey('page', $query2);
+		$this->assertEquals('HomePage', $query2['page']);
+	}
+
+
+	function testAddQueryString2() {
+		$url = 'http://example.org/index.php?page=HomePage';
+		$this->httpUrl->setUrl($url);
+
+		$query = $this->httpUrl->getQuery();
+		$this->assertArrayHasKey('page', $query);
+		$this->assertEquals('HomePage', $query['page']);
+
+		// Now add a new query string
+		$this->httpUrl->addQuery('var2', 'key2');
+		$query2 = $this->httpUrl->getQuery();
+		$this->assertArrayHasKey('var2', $query2);
+		$this->assertEquals('key2', $query2['var2']);
+		$this->assertArrayHasKey('page', $query2);
+		$this->assertEquals('HomePage', $query2['page']);
+	}
+
+
+	function testAddQueryString3() {
+		$url = 'http://example.org/index.php?HomePage';
+		$this->httpUrl->setUrl($url);
+
+		$query = $this->httpUrl->getQuery();
+		$this->assertArrayHasKey('HomePage', $query);
+		$this->assertEquals('', $query['HomePage']);
+
+	}
+
 
 	function testSetAbsoluteUrl() {
 		$url = 'http://www.example.com/path/to/file.html';
@@ -96,6 +145,7 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$url3 = $this->httpUrl->getUrl();
 		$this->assertEquals($expected, $url3);
 	}
+
 	
 	function testSetRelativeUrl() {
 		$url = 'http://www.example.com/path/to/file.html';
@@ -111,6 +161,7 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $url3);
 	}
 
+
 	function testSetRelativeUrl2() {
 		$url = 'http://www.example.com/path/to/file.html';
 		$this->httpUrl->setUrl($url);	
@@ -125,6 +176,7 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $url3);
 	}
 
+
 	function testSetRelativeUrl3() {
 		$url = 'http://www.example.com/';
 		$this->httpUrl->setUrl($url);	
@@ -138,6 +190,7 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$url3 = $this->httpUrl->getUrl();
 		$this->assertEquals($expected, $url3);
 	}
+
 	
 	function testQueryString() {
 		$qs = array(
@@ -154,6 +207,7 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$url2     = $this->httpUrl->getUrl();
 		$this->assertEquals($url2, $expected);
 	}
+
 
 }
 
