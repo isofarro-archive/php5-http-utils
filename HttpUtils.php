@@ -67,8 +67,14 @@ class HttpUrl {
 			$parts = explode('&', $query);
 			$this->query = array();
 			foreach($parts as $part) {
-				list($key, $value) = explode('=', $part, 2);
-				$this->query[$key] = $value;
+				//echo "QS-Part:{$part}\n";
+				if (strpos($part, '=')!==false) {
+					list($key, $value) = explode('=', $part, 2);
+					$this->query[$key] = $value;
+				} else {
+					//echo "ERROR:{$part} Doesn't contain =\n";
+					$this->query[$part] = '';
+				}
 			}
 		}
 		$this->_createUrl();
@@ -126,12 +132,13 @@ class HttpUrl {
 						$query[] = "$key=$value";
 					} else {
 						$query[] = $key;
-						if ($isSingle) {
+						if (!$isSingle) {
 							$query[] = '=';
 						}
 					}
 				}
 			}
+
 			$parts[] = '?';
 			$parts[] = implode('&', $query);
 		}

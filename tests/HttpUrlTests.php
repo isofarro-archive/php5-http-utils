@@ -12,7 +12,8 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 	function tearDown() {
 	
 	}
-	
+
+
 	function testInitHttpUrl() {
 		$this->assertTrue(class_exists('HttpUrl'));
 		$url = new HttpUrl();
@@ -49,6 +50,24 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$this->assertNotNull($url3);
 		$this->assertType('string', $url3);
 		$this->assertEquals($url, $url3);
+	}
+
+
+	function testUpdateQueryString() {
+		$url = 'http://example.org/index.php';
+		$this->httpUrl->setUrl($url);
+		
+		$qs = 'HomePage';
+		$expected = 'http://example.org/index.php?HomePage';
+		$this->httpUrl->setQuery($qs);
+
+		$query = $this->httpUrl->getQuery();
+
+		$url2 = $this->httpUrl->getUrl();
+		$this->assertNotNull($url2);
+		$this->assertEquals($expected, $url2);
+	
+	
 	}
 
 	function testSetAbsoluteUrl() {
@@ -122,6 +141,7 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$url2     = $this->httpUrl->getUrl();
 		$this->assertEquals($url2, $expected);
 	}
+
 }
 
 
