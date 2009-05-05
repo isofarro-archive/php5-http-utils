@@ -72,7 +72,10 @@ class HttpUrl {
 	
 	public function addQuery($query, $value=false) {
 		if (is_array($query)) {
-			echo "WARN: addQuery[] isn't implemented.\n";
+			$this->query = array_merge(
+				$this->query,
+				$query
+			);
 		} elseif(is_string($query)) {
 			if ($value!==false) {
 				$this->query[$query] = $value;

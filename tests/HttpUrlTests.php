@@ -122,6 +122,29 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 
 
 	function testAddQueryString3() {
+		$url = 'http://example.org/index.php?page=HomePage';
+		$this->httpUrl->setUrl($url);
+
+		$query = $this->httpUrl->getQuery();
+		$this->assertArrayHasKey('page', $query);
+		$this->assertEquals('HomePage', $query['page']);
+
+		// Now add a new query string
+		$this->httpUrl->addQuery(array(		
+			'var2' => 'key2',
+			'var3' => 'key3'
+		));
+		$query2 = $this->httpUrl->getQuery();
+		$this->assertArrayHasKey('page', $query2);
+		$this->assertEquals('HomePage', $query2['page']);
+		$this->assertArrayHasKey('var2', $query2);
+		$this->assertEquals('key2', $query2['var2']);
+		$this->assertArrayHasKey('var3', $query2);
+		$this->assertEquals('key3', $query2['var3']);
+	}
+
+
+	function testAddQueryString4() {
 		$url = 'http://example.org/index.php?HomePage';
 		$this->httpUrl->setUrl($url);
 
