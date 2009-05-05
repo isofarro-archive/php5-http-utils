@@ -23,6 +23,124 @@ class HttpUrl {
 		}
 	}
 	
+	public function getScheme() {
+		return $this->scheme;
+	}
+	
+	public function setScheme($scheme) {
+		if (strpos('|http|https|ftp|file|', "|{$scheme}|")!==false) {
+			$this->scheme = $scheme;
+			$this->_createUrl();
+		}
+	}
+	
+	public function getUser() {
+		return $this->user;
+	}
+	
+	public function setUser($user) {
+		if ($user===false || is_null($user)) {
+			$this->user = NULL;
+			$this->_createUrl();
+		} elseif (preg_match('/^[A-Za-z0-9_-]+$/', $user)) {
+			$this->user = $user;
+			$this->_createUrl();
+		}
+	}
+	
+	public function getPass() {
+		if ($this->user) {
+			return $this->pass;
+		}
+	}
+	
+	public function setPass($pass) {
+		if ($pass===false || is_null($pass)) {
+			$this->pass = NULL;
+			$this->_createUrl();
+		} elseif (preg_match('/^[^\@]+$/', $pass)) {
+			$this->pass = $pass;
+			$this->_createUrl();
+		}
+	}
+	
+	public function getHost() {
+		return $this->host;
+	}
+	
+	public function setHost($host) {
+		if (preg_match('/^([A-Za-z0-9-]+\.)+[A-Za-z0-9-]{2,}$/', $host)) {
+			$this->host = $host;
+			$this->_createUrl();
+		}
+	}
+	
+	public function getPort() {
+		return $this->port;
+	}
+	
+	public function setPort($port) {
+		if ($port===false || is_null($port)) {
+			$this->port = NULL;
+			$this->_createUrl();
+		} elseif (is_numeric($port)) {
+			$this->port = $port;
+			$this->_createUrl();
+		}
+	}
+	
+	public function getPath() {
+		return $this->path;
+	}
+
+	public function setPath($path) {
+		if (preg_match('/^[^?#]+$/', $path)) {
+			$this->path = $path;
+			$this->_createUrl();
+		}
+	}
+
+	public function getQuery() {
+		return $this->query;
+	}
+	
+	public function getQueryString() {
+		return $this->_createQueryString();	
+	}
+	
+	public function setQuery($query) {
+		if (is_array($query)) {
+			$this->query = $query;
+		} elseif ($query) {
+			$this->query = array();
+			$this->_processQueryString($query);
+		}
+		$this->_createUrl();
+	}
+
+	public function getFragment() {
+		return $this->fragment;
+	}
+
+
+	public function setFragment($fragment) {
+		if (is_null($fragment)) {
+			$this->fragment = NULL;
+			$this->_createUrl();
+		} else  {
+			$this->fragment = $fragment;
+			$this->_createUrl();
+		}
+	}
+
+	public function getUrl() {
+		return $this->url;
+	}
+	
+	public function getRawUrl() {
+		return $this->rawUrl;
+	}
+	
 	public function setUrl($url) {
 		$urlParts = parse_url($url);
 		if ($urlParts) {
@@ -52,23 +170,7 @@ class HttpUrl {
 		}
 	}
 	
-	public function getUrl() {
-		return $this->url;
-	}
 	
-	public function getRawUrl() {
-		return $this->rawUrl;
-	}
-	
-	public function setQuery($query) {
-		if (is_array($query)) {
-			$this->query = $query;
-		} elseif ($query) {
-			$this->query = array();
-			$this->_processQueryString($query);
-		}
-		$this->_createUrl();
-	}
 	
 	public function addQuery($query, $value=false) {
 		if (is_array($query)) {
@@ -86,9 +188,6 @@ class HttpUrl {
 		$this->_createUrl();
 	}
 	
-	public function getQuery() {
-		return $this->query;
-	}
 	
 
 	protected function _updateUrlParts($urlParts) {
@@ -130,23 +229,11 @@ class HttpUrl {
 		$parts[] = $this->path;
 		
 		if (!empty($this->query)) {
-			$query = array();
-			$isSingle = (count($this->query)==1);
-			foreach($this->query as $key=>$value) {
-				if ($key) {
-					if ($value) {
-						$query[] = "$key=$value";
-					} else {
-						$query[] = $key;
-						if (!$isSingle) {
-							$query[] = '=';
-						}
-					}
-				}
+			$queryString = $this->_createQueryString();
+			if ($queryString) {
+				$parts[] = '?';
+				$parts[] = $queryString;
 			}
-
-			$parts[] = '?';
-			$parts[] = implode('&', $query);
 		}
 		
 		if ($this->fragment) {
@@ -168,6 +255,28 @@ class HttpUrl {
 				$this->query[$part] = '';
 			}
 		}
+	}
+	
+	protected function _createQueryString() {
+		$queryString = '';
+		if (!empty($this->query)) {
+			$query = array();
+			$isSingle = (count($this->query)==1);
+			foreach($this->query as $key=>$value) {
+				if ($key) {
+					if ($value) {
+						$query[] = "$key=$value";
+					} else {
+						$query[] = $key;
+						if (!$isSingle) {
+							$query[] = '=';
+						}
+					}
+				}
+			}
+			$queryString = implode('&', $query);
+		}
+		return $queryString;
 	}
 	
 }

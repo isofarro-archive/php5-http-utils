@@ -35,6 +35,25 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$this->assertNotNull($url3);
 		$this->assertType('string', $url3);
 		$this->assertEquals($url, $url3);
+		
+		
+		$this->assertEquals('http', $this->httpUrl->getScheme());
+		$this->assertEquals('user', $this->httpUrl->getUser());
+		$this->assertEquals('password', $this->httpUrl->getPass());
+		$this->assertEquals('example.org', $this->httpUrl->getHost());
+		$this->assertEquals('8080', $this->httpUrl->getPort());
+		$this->assertEquals('/path/file.php', $this->httpUrl->getPath());
+		$this->assertEquals('key1=val1&key2=val2', $this->httpUrl->getQueryString());
+		$this->assertEquals('place', $this->httpUrl->getFragment());
+
+		$query = $this->httpUrl->getQuery();
+		$this->assertType('array', $query);
+
+		$this->assertArrayHasKey('key1', $query);
+		$this->assertEquals('val1', $query['key1']);
+		$this->assertArrayHasKey('key2', $query);
+		$this->assertEquals('val2', $query['key2']);
+
 	}
 
 
@@ -256,6 +275,150 @@ class HttpUrlTests extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($url2, $expected);
 	}
 
+
+
+	function testChangeScheme() {
+		$url      = 'http://example.org/file.php';
+		$expected = 'https://example.org/file.php';
+		$this->httpUrl->setUrl($url);	
+
+		// Valid change
+		$this->httpUrl->setScheme('https');
+		$this->assertEquals('https', $this->httpUrl->getScheme());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+		
+		// invalid change
+		$this->httpUrl->setScheme('httpZ');
+		$this->assertEquals('https', $this->httpUrl->getScheme());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+	}
+
+
+	function testChangeUser() {
+		$url      = 'http://example.org/file.php';
+		$expected = 'http://joebloggs@example.org/file.php';
+		$this->httpUrl->setUrl($url);	
+
+		// Valid change
+		$this->httpUrl->setUser('joebloggs');
+		$this->assertEquals('joebloggs', $this->httpUrl->getUser());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+		
+		// invalid change
+		$this->httpUrl->setUser('joe@bloggs');
+		$this->assertEquals('joebloggs', $this->httpUrl->getUser());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+	}
+
+
+	function testChangePass() {
+		$url      = 'http://joebloggs@example.org/file.php';
+		$expected = 'http://joebloggs:qwerty@example.org/file.php';
+		$this->httpUrl->setUrl($url);	
+
+		// Valid change
+		$this->httpUrl->setPass('qwerty');
+		$this->assertEquals('qwerty', $this->httpUrl->getPass());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+		
+		// invalid change
+		$this->httpUrl->setPass('joe@bloggs');
+		$this->assertEquals('qwerty', $this->httpUrl->getPass());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+		
+		// nuke password
+		$this->httpUrl->setPass(NULL);
+		$this->assertEquals('', $this->httpUrl->getPass());
+		$this->assertEquals($url, $this->httpUrl->getUrl());
+
+		// Valid change
+		$this->httpUrl->setPass('qwerty');
+		$this->assertEquals('qwerty', $this->httpUrl->getPass());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+
+		// Nuke user		
+		$this->httpUrl->setUser(NULL);
+		$this->assertEquals('', $this->httpUrl->getUser());
+		$this->assertEquals('', $this->httpUrl->getPass());
+		$this->assertEquals('http://example.org/file.php', $this->httpUrl->getUrl());
+	}
+
+	function testChangePort() {
+		$url      = 'http://example.org/file.php';
+		$expected = 'http://example.org:8080/file.php';
+		$this->httpUrl->setUrl($url);	
+
+		// Valid change
+		$this->httpUrl->setPort('8080');
+		$this->assertEquals('8080', $this->httpUrl->getPort());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+		
+		// invalid change
+		$this->httpUrl->setPort('ALL');
+		$this->assertEquals('8080', $this->httpUrl->getPort());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+
+
+		// nuke port
+		$this->httpUrl->setPort(NULL);
+		$this->assertEquals('', $this->httpUrl->getPort());
+		$this->assertEquals($url, $this->httpUrl->getUrl());
+	}
+
+
+	function testChangeHost() {
+		$url      = 'http://example.org/file.php';
+		$expected = 'http://example.com/file.php';
+		$this->httpUrl->setUrl($url);	
+
+		// Valid change
+		$this->httpUrl->setHost('example.com');
+		$this->assertEquals('example.com', $this->httpUrl->getHost());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+		
+		// invalid change
+		$this->httpUrl->setHost('example..com');
+		$this->assertEquals('example.com', $this->httpUrl->getHost());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+
+	}
+
+
+	function testChangePath() {
+		$url      = 'http://example.org/file.php';
+		$expected = 'http://example.org/audio';
+		$this->httpUrl->setUrl($url);	
+
+		// Valid change
+		$this->httpUrl->setPath('/audio');
+		$this->assertEquals('/audio', $this->httpUrl->getPath());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+		
+		// invalid change
+		$this->httpUrl->setPath('/aud?o');
+		$this->assertEquals('/audio', $this->httpUrl->getPath());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+
+	}
+
+
+	function testChangeFragment() {
+		$url      = 'http://example.org/file.php';
+		$expected = 'http://example.org/file.php#anchor_top';
+		$this->httpUrl->setUrl($url);	
+
+		// Valid change
+		$this->httpUrl->setFragment('anchor_top');
+		$this->assertEquals('anchor_top', $this->httpUrl->getFragment());
+		$this->assertEquals($expected, $this->httpUrl->getUrl());
+		
+		// nuke change
+		$this->httpUrl->setFragment(NULL);
+		$this->assertEquals('', $this->httpUrl->getFragment());
+		$this->assertEquals($url, $this->httpUrl->getUrl());
+
+
+	}
 
 }
 
