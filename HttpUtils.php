@@ -82,18 +82,20 @@ class HttpUrl {
 	protected function _updateUrlParts($urlParts) {
 		//print_r($urlParts);
 
-		if ($urlParts['scheme']) {
+		if (!empty($urlParts['scheme'])) {
 			// This is a fully qualified URL
 			$this->scheme   = $urlParts['scheme'];
-			$this->user     = $urlParts['user'];
-			$this->pass     = $urlParts['pass'];
+			$this->user     = empty($urlParts['user'])?'':$urlParts['user'];
+			$this->pass     = empty($urlParts['pass'])?'':$urlParts['pass'];
 			$this->host     = $urlParts['host'];
-			$this->port     = $urlParts['port'];
+			$this->port     = empty($urlParts['port'])?'':$urlParts['port'];
 		}
 		$this->path     = $urlParts['path'];
-		$this->fragment = $urlParts['fragment'];
+		$this->fragment = empty($urlParts['fragment'])?'':$urlParts['fragment'];
 		
-		$this->setQuery($urlParts['query']);
+		if (!empty($urlParts['query'])) {
+			$this->setQuery($urlParts['query']);
+		}
 	}
 	
 	protected function _createUrl() {
