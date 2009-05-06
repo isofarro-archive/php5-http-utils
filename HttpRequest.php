@@ -2,8 +2,8 @@
 
 class HttpRequest {
 	protected $method  = 'GET'; 
-	//protected $path;	   // Path segment, without query string (mandatory)
-	//protected $query;    // Query string (optional)
+	//protected $path;  // Path segment, without query string (mandatory)
+	//protected $query; // Query string (optional)
 	protected $version = 'HTTP/1.1';
 	
 	protected $headers = array();
@@ -75,6 +75,9 @@ class HttpRequest {
 	}
 
 
+	public function getMethod() {
+		return $this->method;
+	}
 }
 
 
