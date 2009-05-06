@@ -1,6 +1,93 @@
 <?php
 
 /**
+* HttpHeaders is an encapsulation of the Http Headers
+* of both the HttpRequest and HttpResponse objects.
+**/
+
+class HttpHeaders {
+	protected $headers;
+	protected $headerKey;
+	
+	public function __construct() {
+		$this->headers   = array();
+		$this->headerKey = array();
+	}
+	
+	public function addHeader($name, $value=false) {
+		if ($value !== false) {
+					
+		} else {
+
+		}
+	}
+
+
+	public function hasHeader($name) {
+		return array_key_exists($name, $this->headerKey);
+	}
+	
+	protected function _addHeader($name, $value) {
+			
+	
+	}
+	
+	protected function _rebuildHeaderKey() {
+		$this->headerKey = array();
+		$len = count($this->headers);
+		for ($i=0; $i<$len; $i++) {
+			
+		}
+	}
+}
+
+/**
+* An encapsulation of a single HttpHeader
+**/
+class HttpHeader {
+	var $header;
+	var $value;
+
+	public function __construct($name=false, $value=false) {
+		if ($name!==false || $value!==false) {
+			$this->setHeader($name, $value);
+		}
+	}
+
+	public function setHeader($name, $value) {
+		if ($name!==false) {
+			$this->setName($name);
+		}
+		if ($value!==false) {
+			$this->setValue($value);
+		}
+	}
+
+	
+	public function getName() {
+		return $this->name;
+	}
+	
+	public function setName($name) {
+		if (is_string($name)) {
+			$this->name = $name;
+		}
+	}
+
+
+	public function getValue() {
+		return $this->value;
+	}
+	
+	public function setValue($value) {
+		if (is_string($value)) {
+			$this->value = $value;
+		}
+	}
+	
+}
+
+/**
 * HttpUrl an encapsulation of a HTTP URL, to ease the correct
 * processing on URLs in HTTP requests and responses.
 **/
