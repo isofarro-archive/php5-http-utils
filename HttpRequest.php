@@ -6,7 +6,7 @@ class HttpRequest {
 	//protected $query; // Query string (optional)
 	protected $version = 'HTTP/1.1';
 	
-	protected $headers = array();
+	protected $headers;
 	protected $body;
 	
 	// Raw data
@@ -18,6 +18,7 @@ class HttpRequest {
 		if ($url) {
 			$this->setUrl($url);
 		}
+		$this->headers = new HttpHeaders();
 	}
 	
 	public function setUrl($url) {
@@ -104,6 +105,23 @@ class HttpRequest {
 	
 	public function setBody($body) {
 		$this->body = $body;
+	}
+	
+	public function getHeaders() {
+		$headers = $this->headers->getHeaders();
+		$headerList = array();
+		foreach($headers as $header) {
+			$headerList[] = "{$header[0]}: {$header[1]}";
+		}
+		return $headerList;
+	}
+	
+	
+	public function _initHttpHeaders() {
+		$host = $this->getHost();
+		if ($host) {
+			$this->headers->setHeader('Host', $host);
+		}
 	}
 }
 

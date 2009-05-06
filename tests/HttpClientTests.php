@@ -2,6 +2,7 @@
 
 require_once '../HttpClient.php';
 require_once '../HttpRequest.php';
+require_once '../HttpResponse.php';
 require_once '../HttpUtils.php';
 
 class HttpClientTests extends PHPUnit_Framework_TestCase {

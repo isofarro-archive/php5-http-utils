@@ -22,6 +22,10 @@ class HttpHeaders {
 		return NULL;	
 	}
 	
+	public function getHeaders() {
+		return $this->headers;
+	}
+	
 	public function setHeader($name, $value) {
 		$pos = $this->_getHeaderPos($name);
 		if (!is_null($pos)) {
