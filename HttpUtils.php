@@ -55,7 +55,11 @@ class HttpHeader {
 	}
 	
 	public function getHeader() {
-		return "{$this->name}: {$this->value}";	
+		if (is_string($this->value)) {
+			return "{$this->name}: {$this->value}";	
+		} elseif (is_array($this->value)) {
+			return $this->name . ': ' . implode(',', $this->value);
+		}
 	}
 	
 	public function getHeaderArray() {
@@ -88,7 +92,7 @@ class HttpHeader {
 	}
 	
 	public function setValue($value) {
-		if (is_string($value)) {
+		if (is_string($value) || is_array($value)) {
 			$this->value = $value;
 		}
 	}
