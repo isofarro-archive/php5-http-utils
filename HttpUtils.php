@@ -45,7 +45,7 @@ class HttpHeaders {
 * An encapsulation of a single HttpHeader
 **/
 class HttpHeader {
-	var $header;
+	var $name;
 	var $value;
 
 	public function __construct($name=false, $value=false) {
@@ -53,7 +53,15 @@ class HttpHeader {
 			$this->setHeader($name, $value);
 		}
 	}
-
+	
+	public function getHeader() {
+		return "{$this->name}: {$this->value}";	
+	}
+	
+	public function getHeaderArray() {
+		return array($this->name, $this->value);
+	}
+	
 	public function setHeader($name, $value) {
 		if ($name!==false) {
 			$this->setName($name);
