@@ -78,6 +78,33 @@ class HttpRequest {
 	public function getMethod() {
 		return $this->method;
 	}
+	
+	public function setMethod($method) {
+		$method = strtoupper($method);
+		if (strpos('|GET|POST|PUT|DELETE|HEAD|', '|'.$method.'|')!==false) {
+			$this->method = $method;
+		}
+	}
+
+	public function getVersion() {
+		return $this->version;
+	}
+	
+	public function setVerson($version) {
+		$version = strtoupper($version);
+		if (preg_match('/^HTTP\/\d\.\d+/', $version)) {
+			$this->method = $method;
+		}
+	}
+
+
+	public function getBody() {
+		return $this->body;
+	}
+	
+	public function setBody($body) {
+		$this->body = $body;
+	}
 }
 
 
