@@ -14,30 +14,56 @@ class HttpHeaders {
 		$this->headerKey = array();
 	}
 	
-	public function addHeader($name, $value=false) {
-		if ($value !== false) {
-					
+	public function getHeader($name) {
+		$pos = $this->_getHeaderPos($name);
+		if (!is_null($pos)) {
+			return $this->headers[$pos][1];
+		}
+		return NULL;	
+	}
+	
+	public function setHeader($name, $value) {
+		$pos = $this->_getHeaderPos($name);
+		if (!is_null($pos)) {
+			$this->headers[$pos] = array($name, $value);
 		} else {
-
+			$this->_addHeader($name, $value);
 		}
 	}
-
+	
+	public function removeHeader($name) {
+		$pos = $this->_getHeaderPos($name);
+		if (!is_null($pos)) {
+			unset($this->headers[$pos]);
+			$this->_rebuildHeaderKey();
+			return true;
+		}
+		return false;	
+	}
 
 	public function hasHeader($name) {
 		return array_key_exists($name, $this->headerKey);
 	}
 	
-	protected function _addHeader($name, $value) {
-			
+	protected function _getHeaderPos($name) {
+		if ($this->hasHeader($name)) {
+			return $this->headerKey[$name];
+		}
+	}
 	
+	protected function _addHeader($name, $value) {
+		$this->headers[] = array($name, $value);
+		$this->_rebuildHeaderKey();
 	}
 	
 	protected function _rebuildHeaderKey() {
+		//echo "Rebuild: "; print_r($this->headers);
 		$this->headerKey = array();
 		$len = count($this->headers);
-		for ($i=0; $i<$len; $i++) {
-			
+		while(list($key, $value) = each($this->headers)) {
+			$this->headerKey[$value[0]] = $key;
 		}
+		//print_r($this->headerKey); print_r($this->headers);
 	}
 }
 
