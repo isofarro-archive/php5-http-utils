@@ -81,7 +81,12 @@ class HttpHeaderTests extends PHPUnit_Framework_TestCase {
 		$headerArray = $this->header->getHeaderArray();
 		$this->assertEquals('header1', $headerArray[0]);
 		$this->assertType('array',  $headerArray[1]);
+		$this->assertEquals('value1',  $headerArray[1][0]);
+		$this->assertEquals('value2',  $headerArray[1][1]);
+		$this->assertEquals('value3',  $headerArray[1][2]);
 	}
 }
+
+
 
 ?>

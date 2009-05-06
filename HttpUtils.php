@@ -92,11 +92,48 @@ class HttpHeader {
 	}
 	
 	public function setValue($value) {
-		if (is_string($value) || is_array($value)) {
+		if (is_string($value)) {
+			// TODO: Check if it contains q-values
+			$this->value = $value;
+		} elseif (is_array($value)) {
 			$this->value = $value;
 		}
 	}
 	
+}
+
+/**
+* An encapsulation of a qvalue suffixed Header item
+**/
+class HttpHeaderQvalue {
+	protected $value;
+	protected $qvalue;
+	
+	public function __construct($value=false, $qvalue=false) {
+		if ($value) {
+			$this->setValue($value, $qvalue);
+		}
+	}
+	
+	public function getValue() {
+		return $this->value;
+	}
+	
+	public function setValue($value, $qvalue=false) {
+		$this->value = $value;
+		if ($qvalue) {
+			$this->setQvalue($qvalue);
+		}
+	}
+
+	public function getQvalue() {
+		return $this->qvalue;
+	}
+
+	public function setQvalue($qvalue) {
+		$this->qvalue = $qvalue;
+	}
+
 }
 
 /**
