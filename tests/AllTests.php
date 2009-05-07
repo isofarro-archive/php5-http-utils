@@ -18,7 +18,7 @@ class AllTests {
 		$suite->addTestSuite('HttpRequestTest');
 		$suite->addTestSuite('HttpResponseTest');
 		$suite->addTestSuite('HttpUrlTest');
-		//$suite->addTestSuite('HttpClientTest');
+		$suite->addTestSuite('HttpClientTest');
 		//$suite->addTestSuite('TwitterApiTest');
 		return $suite; 
 	}
