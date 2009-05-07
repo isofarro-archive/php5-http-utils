@@ -52,7 +52,12 @@ class HttpClient {
 
 		$httpOutput = curl_exec($ch);
 		//print_r($httpOutput);
-		$response = $this->_parseResponse($httpOutput);
+		if ($httpOutput) {
+			$response = $this->parseResponse($httpOutput);
+		} else {
+			$response = $this->_createErrorResponse($ch);
+			echo "RESPONSE: "; print_r($response);
+		}							
 								
 		curl_close($ch);
 		return $response;
@@ -139,7 +144,7 @@ class HttpClient {
 
 		$httpOutput = curl_exec($ch);
 		$response = $this->parseResponse($httpOutput);
-								
+
 		curl_close($ch);
 		return $response;
 	}
@@ -184,16 +189,20 @@ class HttpClient {
 			}
 			// The buffer is the HTTP Entity Body
 			$response->setBody(implode("\n", $buffer));
+		}
+		return $response;
+	}
+	
+	protected function _createErrorResponse($ch) {
+		$response = new HttpResponse();
+		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		
+		if ($statusCode==0) {
+			$response->setStatus(502);
+			$response->setStatusMsg('CURL Error');
 		} else {
-			$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			
-			if ($statusCode==0) {
-				$response->setStatus(502);
-				$response->setStatusMsg('CURL Error');
-			} else {
-				$response->setStatus($statusCode);
-				$response->setStatusMsg('CURL Response');
-			}	
+			$response->setStatus($statusCode);
+			$response->setStatusMsg('CURL Response');
 		}
 		return $response;
 	}
