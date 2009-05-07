@@ -6,23 +6,43 @@ class HttpClient {
 
 	// The actual transfer client
 	protected $client;
+	
+	// Flag whether to follow redirect responses or not
+	protected $followRedirects = false;
+	
+
+	public function setFollowRedirect($follow) {
+		if (is_bool($follow)) {
+			$this->followRedirects = $follow;
+		}
+	}
+	
+	public function isFollowRedirect() {
+		return $this->followRedirects;
+	}
 
 
 	public function getUrl($url) {
 		$request = new HttpRequest($url);
 		$response = $this->doRequest($request);
-		//print_r($response);
 		
-		return $response->getBody();
+		if ($response->getStatus() == 200) {
+			return $response->getBody();
+		}
+		
+		//print_r($response);
+		return NULL;		
 	}
 
 
 	public function doRequest($request) {
 		$request->_initHttpHeaders();
+		$response = NULL;
+		
 		//print_r($request);
 		switch($request->getMethod()) {
 			case 'GET':
-				return $this->doGet($request);
+				$response = $this->doGet($request);
 				break;
 			case 'POST':
 			case 'PUT':
@@ -31,6 +51,17 @@ class HttpClient {
 				echo 'WARN: ', $request->getMethod(), " not implemented.\n";
 				break;		
 		}
+		
+		if ($this->followRedirects) {
+			if (	$response->getStatus()==301 ||
+					$response->getStatus()==302 ) {
+				//echo "Redirecting\n";
+				$request->setUrl($response->getHeader('Location'));
+				$response = $this->doRequest($request);
+			}
+		}
+		
+		return $response;
 	}
 	
 	public function doGet($request) {
@@ -53,7 +84,7 @@ class HttpClient {
 		$httpOutput = curl_exec($ch);
 		//print_r($httpOutput);
 		if ($httpOutput) {
-			$response = $this->parseResponse($httpOutput);
+			$response = $this->_parseResponse($httpOutput);
 		} else {
 			$response = $this->_createErrorResponse($ch);
 			echo "RESPONSE: "; print_r($response);

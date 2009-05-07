@@ -23,13 +23,35 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 
 
 	public function testSimpleGet() {
-		$url = 'http://yahoo.com/';
+		$url = 'http://www.yahoo.com';
 		
 		$response = $this->http->getUrl($url);
 		$this->assertNotNull($response);
 		$this->assertTrue(is_string($response));
-		
 	}
+	
+	public function testSimpleNoRedirectGet() {
+		$url = 'http://yahoo.com/';
+		
+		$response = $this->http->getUrl($url);
+		$this->assertNull($response);
+	}
+
+	public function testSimpleRedirectGet() {
+		$url = 'http://yahoo.com/';
+		
+		$this->http->setFollowRedirect(true);
+		$response = $this->http->getUrl($url);
+		$this->assertNotNull($response);
+		$this->assertTrue(is_string($response));
+	}
+
+	public function testSimpleGetPageNotFound() {
+		$url = 'http://eurosport.yahoo.com/this_page_doesnt_exist.html';
+		$response = $this->http->getUrl($url);
+		$this->assertNull($response);
+	}	
+
 }
 
 ?>
