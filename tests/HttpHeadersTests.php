@@ -67,6 +67,23 @@ class HttpHeadersTests extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('value2', $headerVal);
 	}
 
+	function testAddNewHeaders() {
+		$this->headers->setHeader('header1', 'value1');
+		
+		$this->assertTrue($this->headers->hasHeader('header1'));
+		$this->assertEquals('value1', $this->headers->getHeader('header1'));
+	
+		//echo "Before "; print_r($this->headers);
+		$this->headers->setHeader('header2', 'value2');
+		//echo "After: "; print_r($this->headers);
+
+		$this->assertTrue($this->headers->hasHeader('header1'));
+		$this->assertEquals('value1', $this->headers->getHeader('header1'));
+	
+		$this->assertTrue($this->headers->hasHeader('header2'));
+		$this->assertEquals('value2', $this->headers->getHeader('header2'));
+	
+	}
 
 }
 

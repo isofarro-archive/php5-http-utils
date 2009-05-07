@@ -51,8 +51,9 @@ class HttpHeaders {
 	
 	protected function _getHeaderPos($name) {
 		if ($this->hasHeader($name)) {
-			return $this->headerKey[$name];
+			return (int)$this->headerKey[$name];
 		}
+		return NULL;
 	}
 	
 	protected function _addHeader($name, $value) {
@@ -63,11 +64,11 @@ class HttpHeaders {
 	protected function _rebuildHeaderKey() {
 		//echo "Rebuild: "; print_r($this->headers);
 		$this->headerKey = array();
-		$len = count($this->headers);
+		reset($this->headers);
 		while(list($key, $value) = each($this->headers)) {
 			$this->headerKey[$value[0]] = $key;
 		}
-		//print_r($this->headerKey); print_r($this->headers);
+		//print_r($this->headerKey); //print_r($this->headers);
 	}
 }
 

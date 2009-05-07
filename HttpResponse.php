@@ -55,6 +55,13 @@ class HttpResponse {
 		$this->headers->setHeader($header, $value);
 	}
 
+	public function hasHeader($header) {
+		return $this->headers->hasHeader($header);
+	}
+	
+	public function getHeader($header) {
+		return $this->headers->getHeader($header);
+	}
 }
 
 ?>
