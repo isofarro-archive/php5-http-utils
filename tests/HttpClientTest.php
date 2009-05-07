@@ -5,7 +5,7 @@ require_once '../HttpRequest.php';
 require_once '../HttpResponse.php';
 require_once '../HttpUtils.php';
 
-class HttpClientTests extends PHPUnit_Framework_TestCase {
+class HttpClientTest extends PHPUnit_Framework_TestCase {
 	var $http;
 
 	public function setUp() {

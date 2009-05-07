@@ -3,7 +3,7 @@
 require_once '../HttpResponse.php';
 require_once '../HttpUtils.php';
 
-class HttpResponseTests extends PHPUnit_Framework_TestCase {
+class HttpResponseTest extends PHPUnit_Framework_TestCase {
 	protected $response;
 	
 	public function setUp() {
@@ -27,8 +27,6 @@ class HttpResponseTests extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('value1', $this->response->getHeader('header1'));
 	
 		$this->response->addHeader('header2', 'value2');
-
-		//print_r($this->response);
 
 		$this->assertTrue($this->response->hasHeader('header1'));
 		$this->assertEquals('value1', $this->response->getHeader('header1'));

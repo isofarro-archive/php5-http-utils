@@ -2,7 +2,7 @@
 
 require_once '../HttpUtils.php';
 
-class HttpUrlTests extends PHPUnit_Framework_TestCase {
+class HttpUrlTest extends PHPUnit_Framework_TestCase {
 	protected $httpUrl;
 	
 	function setUp() {

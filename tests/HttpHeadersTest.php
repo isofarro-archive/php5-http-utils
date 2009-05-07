@@ -2,7 +2,7 @@
 
 require_once '../HttpUtils.php';
 
-class HttpHeadersTests extends PHPUnit_Framework_TestCase {
+class HttpHeadersTest extends PHPUnit_Framework_TestCase {
 	protected $headers;
 	
 	function setUp() {

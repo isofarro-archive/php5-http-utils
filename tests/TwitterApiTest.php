@@ -2,7 +2,7 @@
 
 require_once '../TwitterApi.php';
 
-class TwitterApiTests extends PHPUnit_Framework_TestCase {
+class TwitterApiTest extends PHPUnit_Framework_TestCase {
 	var $twitter;
 
 	public function setUp() {
