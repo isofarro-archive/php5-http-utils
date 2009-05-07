@@ -9,7 +9,6 @@ class HttpClient {
 	
 	// Flag whether to follow redirect responses or not
 	protected $followRedirects = false;
-	
 
 	public function setFollowRedirect($follow) {
 		if (is_bool($follow)) {

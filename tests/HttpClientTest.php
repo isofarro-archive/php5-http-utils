@@ -16,6 +16,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 		$this->http = NULL;
 	}
 	
+
 	public function testInitHttpClient() {
 		$this->assertTrue(class_exists('HttpClient'));
 	
@@ -50,7 +51,21 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 		$url = 'http://eurosport.yahoo.com/this_page_doesnt_exist.html';
 		$response = $this->http->getUrl($url);
 		$this->assertNull($response);
-	}	
+	}
+	
+	
+	public function testDoGetRequest() {
+		$request = new HttpRequest();
+		$request->setUrl('http://uk.yahoo.com/');
+		
+		$response = $this->http->doRequest($request);
+
+		//print_r($response);
+		$this->assertEquals(200, $response->getStatus());
+		$this->assertNotNull($response->getBody());
+		$this->assertTrue(is_string($response->getBody()));
+		
+	}
 
 }
 

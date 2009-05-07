@@ -11,6 +11,10 @@ class HttpRequest {
 	
 	// Raw data
 	protected $url;
+	
+	protected $userAgent = 
+		'HttpClient 0.0.1 - http://github.com/isofarro/php5-http-utils';
+
 
 
 	public function __construct($url = false) {
@@ -121,6 +125,10 @@ class HttpRequest {
 		$host = $this->getHost();
 		if ($host) {
 			$this->headers->setHeader('Host', $host);
+		}
+		
+		if (!$this->headers->hasHeader('User-Agent')) {
+			$this->headers->setHeader('User-Agent', $this->userAgent);
 		}
 	}
 }
