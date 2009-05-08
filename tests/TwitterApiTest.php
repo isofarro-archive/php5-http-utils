@@ -1,6 +1,6 @@
 <?php
 
-require_once '../TwitterApi.php';
+require_once dirname(dirname(__file__)) . '/TwitterApi.php';
 
 class TwitterApiTest extends PHPUnit_Framework_TestCase {
 	var $twitter;

@@ -1,6 +1,6 @@
 <?php
 
-require_once '../HttpUtils.php';
+require_once dirname(dirname(__file__)) . '/HttpUtils.php';
 
 class HttpUrlTest extends PHPUnit_Framework_TestCase {
 	protected $httpUrl;

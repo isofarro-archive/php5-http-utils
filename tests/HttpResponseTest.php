@@ -1,7 +1,7 @@
 <?php
 
-require_once '../HttpResponse.php';
-require_once '../HttpUtils.php';
+require_once dirname(dirname(__file__)) . '/HttpResponse.php';
+require_once dirname(dirname(__file__)) . '/HttpUtils.php';
 
 class HttpResponseTest extends PHPUnit_Framework_TestCase {
 	protected $response;

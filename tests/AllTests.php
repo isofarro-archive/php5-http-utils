@@ -6,6 +6,7 @@ require_once 'HttpRequestTest.php';
 require_once 'HttpResponseTest.php';
 require_once 'HttpUrlTest.php';
 require_once 'HttpClientTest.php';
+require_once 'HtmlParserTest.php';
 require_once 'TwitterApiTest.php';
 
 class AllTests {

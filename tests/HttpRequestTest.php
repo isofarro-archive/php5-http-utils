@@ -1,7 +1,7 @@
 <?php
 
-require_once '../HttpRequest.php';
-require_once '../HttpUtils.php';
+require_once dirname(dirname(__file__)) . '/HttpRequest.php';
+require_once dirname(dirname(__file__)) . '/HttpUtils.php';
 
 class HttpRequestTest extends PHPUnit_Framework_TestCase {
 	var $request;

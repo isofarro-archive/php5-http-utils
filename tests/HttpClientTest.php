@@ -1,9 +1,9 @@
 <?php
 
-require_once '../HttpClient.php';
-require_once '../HttpRequest.php';
-require_once '../HttpResponse.php';
-require_once '../HttpUtils.php';
+require_once dirname(dirname(__file__)) . '/HttpClient.php';
+require_once dirname(dirname(__file__)) . '/HttpRequest.php';
+require_once dirname(dirname(__file__)) . '/HttpResponse.php';
+require_once dirname(dirname(__file__)) . '/HttpUtils.php';
 
 class HttpClientTest extends PHPUnit_Framework_TestCase {
 	var $http;
