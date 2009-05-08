@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(dirname(__file__)) . '/WeFollowApi.php';
+require_once dirname(dirname(__file__)) . '/HtmlParser.php';
 
 class WeFollowApiTest extends PHPUnit_Framework_TestCase {
 	var $api;
