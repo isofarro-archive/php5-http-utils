@@ -48,11 +48,10 @@ class HttpClient {
 		
 		if ($response->getStatus() == 200) {
 			$body = $response->getBody();
-			if (!is_null($body) && strlen($body)>0) {
+			if (!$response->isRedirected()) {
 				$this->cache->cache($url, $body);
-				return $body;
 			}
-			return NULL;
+			return $body;
 		}
 		
 		//print_r($response);
@@ -83,6 +82,7 @@ class HttpClient {
 				//echo "Redirecting\n";
 				$request->setUrl($response->getHeader('Location'));
 				$response = $this->doRequest($request);
+				$response->setRedirected(true);
 			}
 		}
 		

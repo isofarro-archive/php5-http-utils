@@ -46,9 +46,10 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 		$url = 'http://yahoo.com/';
 		
 		$response = $this->http->getUrl($url);
+		//echo "[$response]";
 		$this->assertNull($response);
 	}
-
+	
 	public function testSimpleRedirectGet() {
 		$url = 'http://yahoo.com/';
 		

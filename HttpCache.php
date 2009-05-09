@@ -26,6 +26,8 @@ class HttpCache {
 		}
 		
 		$file = $this->_getFileName($url);
+		
+		echo "Url: {$url}\nFile: {$file}\n";
 		$ret = file_put_contents($file, $text);
 		return (bool)$ret;
 	}
