@@ -39,6 +39,7 @@ class HttpClient {
 		// Check if there's a cached version first
 		// TODO: This is aggressive caching, modify to expire cache
 		if ($this->cache->isCached($url)) {
+			echo "!";
 			return $this->cache->get($url);
 		}
 		
@@ -46,6 +47,7 @@ class HttpClient {
 		$response = $this->doRequest($request);
 		
 		if ($response->getStatus() == 200) {
+			$this->cache->cache($url, $response->getBody());
 			return $response->getBody();
 		}
 		

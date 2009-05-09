@@ -4,7 +4,8 @@ class WeFollowApi {
 	var $http;
 	var $parser;
 	
-	var $tagBaseUrl = 'http://wefollow.com/tags/';
+	var $tagBaseUrl = 'http://wefollow.com/tag/';
+	var $siteBase   = 'http://wefollow.com';
 
 	// Iterator methods
 	var $nextUrl;
@@ -17,13 +18,12 @@ class WeFollowApi {
 		//print_r($pageData);
 
 		// Set up potential iterators
-		// TODO: check that this is a fully qualified URL
 		if (!empty($pageData->nextPage)) {
-			$this->nextUrl = $pageData->nextPage;
+			$this->nextUrl = $this->siteBase . $pageData->nextPage;
 		}
 		
 		if (!empty($pageData->prevPage)) {
-			$this->prevUrl = $pageData->prevPage;
+			$this->prevUrl = $this->siteBase . $pageData->prevPage;
 		}
 
 		return $pageData->people;
@@ -166,16 +166,16 @@ class WeFollowApi {
 		$this->nextUrl = NULL;
 		$this->prevUrl = NULL;
 		if (preg_match('/^\w+$/', $tag)) {
-			echo "It's a partial tag\n";
+			//echo "It's a partial tag\n";
 			return $this->_getTagPage($tag);
 		} elseif (file_exists($tag)) {
-			echo "It's a file";
+			//echo "It's a file";
 			return file_get_contents($tag);
 		} elseif (preg_match('/^http\:\/\//', $tag)) {
-			echo "Has full url: [{$tag}]\n";
-			return $this->_getUrl($url);
+			//echo "Has full url: [{$tag}]\n";
+			return $this->_getUrl($tag);
 		} else {
-			echo "ERROR: Cannot determine [{$tag}]\n";
+			echo "ERROR: Cannot determine urltype: [{$tag}]\n";
 		}
 	}
 	
