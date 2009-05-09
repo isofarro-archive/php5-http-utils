@@ -6,6 +6,9 @@ class HttpClient {
 
 	// The actual transfer client
 	protected $client;
+
+	// Aggressively cache gets
+	protected $cacheGets = true;
 	
 	// Flag whether to follow redirect responses or not
 	protected $followRedirects = false;
