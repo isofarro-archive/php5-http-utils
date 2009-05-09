@@ -20,7 +20,6 @@ class WeFollowApiTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	
-	
 	public function testGetPeople() {
 		//$file = '/home/user/Documents/savedPages/wefollow-accessibility.html';
 		//$file = '/home/isofarro/Documents/savedPages/wefollow-accessibility.html';
@@ -40,11 +39,14 @@ class WeFollowApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($this->api->hasNext());
 		$this->assertFalse($this->api->hasPrevious());
 	}
-	
-/****
+
 	public function testIteratePeople() {
-		$file = 'accessibility';
-		$people = $this->api->getTaggedPeople($file);
+		$tag = 'accessibility';
+		$people = $this->api->getTaggedPeople($tag);
+
+		$this->assertNotNull($people);
+		$this->assertType('array', $people);
+		$this->assertEquals(25, count($people));
 	
 		// Check iterable
 		$this->assertTrue($this->api->hasNext());
@@ -55,7 +57,7 @@ class WeFollowApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertType('array', $people);
 		$this->assertEquals(25, count($people));
 	}
-****/
+
 
 }
 
