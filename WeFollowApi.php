@@ -166,13 +166,16 @@ class WeFollowApi {
 		$this->nextUrl = NULL;
 		$this->prevUrl = NULL;
 		if (preg_match('/^\w+$/', $tag)) {
-			echo "It's a URL\n";
+			echo "It's a partial tag\n";
 			return $this->_getTagPage($tag);
 		} elseif (file_exists($tag)) {
-			//echo "It's a file";
+			echo "It's a file";
 			return file_get_contents($tag);
+		} elseif (preg_match('/^http\:\/\//', $tag)) {
+			echo "Has full url: [{$tag}]\n";
+			return $this->_getUrl($url);
 		} else {
-			echo "ERROR: Cannot determine {$tag}\n";
+			echo "ERROR: Cannot determine [{$tag}]\n";
 		}
 	}
 	

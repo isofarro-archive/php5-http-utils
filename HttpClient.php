@@ -17,6 +17,12 @@ class HttpClient {
 	public function __construct() {
 		$this->cache = new HttpCache();
 	}
+	
+	public function setCacheDir($dir) {
+		if (file_exists($dir) && is_dir($dir)) {
+			$this->cache->setRootDir($dir);
+		}
+	}
 
 	public function setFollowRedirect($follow) {
 		if (is_bool($follow)) {
