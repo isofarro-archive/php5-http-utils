@@ -3,6 +3,7 @@
 require_once dirname(dirname(__file__)) . '/WeFollowApi.php';
 require_once dirname(dirname(__file__)) . '/HtmlParser.php';
 require_once dirname(dirname(__file__)) . '/HttpClient.php';
+require_once dirname(dirname(__file__)) . '/HttpCache.php';
 require_once dirname(dirname(__file__)) . '/HttpRequest.php';
 require_once dirname(dirname(__file__)) . '/HttpResponse.php';
 require_once dirname(dirname(__file__)) . '/HttpUtils.php';
