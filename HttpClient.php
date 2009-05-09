@@ -5,10 +5,18 @@ class HttpClient {
 	protected $response;
 
 	// The actual transfer client
-	protected $client;
+	//protected $client;
+
+	// Aggressively cache gets
+	protected $cacheSimpleGets = true;
+	protected $cache;
 	
 	// Flag whether to follow redirect responses or not
 	protected $followRedirects = false;
+	
+	public function __construct() {
+		$this->cache = new HttpCache();
+	}
 
 	public function setFollowRedirect($follow) {
 		if (is_bool($follow)) {
@@ -22,6 +30,12 @@ class HttpClient {
 
 
 	public function getUrl($url) {
+		// Check if there's a cached version first
+		// TODO: This is aggressive caching, modify to expire cache
+		if ($this->cache->isCached($url)) {
+			return $this->cache->get($url);
+		}
+		
 		$request = new HttpRequest($url);
 		$response = $this->doRequest($request);
 		

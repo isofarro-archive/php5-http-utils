@@ -14,12 +14,37 @@ class WeFollowApi {
 		$html = $this->_getRawData($tag); 
 		//echo "TaggedPeople: "; print_r($html);
 		$pageData = $this->_scrapeTagPage($html);
-		print_r($pageData);
+		//print_r($pageData);
+
+		// Set up potential iterators
+		// TODO: check that this is a fully qualified URL
+		if (!empty($pageData->nextPage)) {
+			$this->nextUrl = $pageData->nextPage;
+		}
+		
+		if (!empty($pageData->prevPage)) {
+			$this->prevUrl = $pageData->prevPage;
+		}
 
 		return $pageData->people;
 	}
 	
+	public function hasNext() {
+		return !empty($this->nextUrl);
+	}
 	
+	public function next() {
+		return $this->getTaggedPeople($this->nextUrl);
+	}
+	
+	public function hasPrevious() {
+		return !empty($this->prevUrl);
+	}
+	
+	public function previous() {
+		return $this->getTaggedPeople($this->prevUrl);
+	}
+
 	
 	protected function _scrapeTagPage($html) {
 		$dom = $this->_parseHtml($html);
@@ -85,12 +110,46 @@ class WeFollowApi {
 				if ($rankInfo->plaintext) {
 					$person->rank     = $rankInfo->plaintext;
 				}
+				
+				// Get follower change
+				$changeInfo = $tweeter->find('.new-follower-number', 0);
+				if ($changeInfo) {
+					$person->followerChange = $changeInfo->plaintext;
+				}
 			
 			
 				$pagedata->people[] = $person;
 
 			}		
 		}
+		
+		// Get the page tag
+		$tagInfo = $dom->find('#column-main h2', 0);
+		$pagedata->tag = $tagInfo->plaintext;
+
+		// Get the total number of followers
+		$totalInfo  = $dom->find('#column-main div.total-followers', 0);
+		if ($totalInfo->plaintext) {
+			if (preg_match('/tag: (\d+,?\d*)/', $totalInfo->plaintext, $matches)) {
+				$total = str_replace(',', '', $matches[1]);
+				$pagedata->totalFollowers = intval($total);
+			}
+		}
+		
+		// Get next and previous pages
+		$navInfo = $dom->find('#column-main a img.more-prev-btn');
+		foreach($navInfo as $navItem) {
+			$link = $navItem->parent->href;
+
+			if (preg_match('/btn_more.gif$/', $navItem->src)) {
+				$pagedata->nextPage = $link;
+			} elseif(preg_match('/btn_prev.gif$/', $navItem->src)) {
+				$pagedata->prevPage = $link;
+			} else {
+				echo "WARN: Unknown button: [{$navItem->src}]\n";
+			}
+		}
+
 		
 		$dom->clear();
 		return $pagedata;
@@ -110,7 +169,7 @@ class WeFollowApi {
 			echo "It's a URL\n";
 			return $this->_getTagPage($tag);
 		} elseif (file_exists($tag)) {
-			echo "It's a file";
+			//echo "It's a file";
 			return file_get_contents($tag);
 		} else {
 			echo "ERROR: Cannot determine {$tag}\n";
