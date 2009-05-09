@@ -94,6 +94,8 @@ class WeFollowApi {
 				if ($siteInfo->href) {
 					$person->website = $siteInfo->href;
 				}
+
+
 				
 				// Tags
 				$tagInfo = $tweeter->find('.other-details p a');
@@ -103,8 +105,6 @@ class WeFollowApi {
 						$person->tags[] = $tagLink->plaintext;
 					}
 				}
-				
-				
 
 				// Grab the rank
 				$rankInfo = $tweeter->find('.rank', 0);
