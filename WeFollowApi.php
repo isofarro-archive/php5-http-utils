@@ -85,12 +85,46 @@ class WeFollowApi {
 				if ($rankInfo->plaintext) {
 					$person->rank     = $rankInfo->plaintext;
 				}
+				
+				// Get follower change
+				$changeInfo = $tweeter->find('.new-follower-number', 0);
+				if ($changeInfo) {
+					$person->followerChange = $changeInfo->plaintext;
+				}
 			
 			
 				$pagedata->people[] = $person;
 
 			}		
 		}
+		
+		// Get the page tag
+		$tagInfo = $dom->find('#column-main h2', 0);
+		$pagedata->tag = $tagInfo->plaintext;
+
+		// Get the total number of followers
+		$totalInfo  = $dom->find('#column-main div.total-followers', 0);
+		if ($totalInfo->plaintext) {
+			if (preg_match('/tag: (\d+,?\d*)/', $totalInfo->plaintext, $matches)) {
+				$total = str_replace(',', '', $matches[1]);
+				$pagedata->totalFollowers = intval($total);
+			}
+		}
+		
+		// Get next and previous pages
+		$navInfo = $dom->find('#column-main a img.more-prev-btn');
+		foreach($navInfo as $navItem) {
+			$link = $navItem->parent->href;
+
+			if (preg_match('/btn_more.gif$/', $navItem->src)) {
+				$pagedata->nextPage = $link;
+			} elseif(preg_match('/btn_prev.gif$/', $navItem->src)) {
+				$pagedata->prevPage = $link;
+			} else {
+				echo "WARN: Unknown button: [{$navItem->src}]\n";
+			}
+		}
+
 		
 		$dom->clear();
 		return $pagedata;
