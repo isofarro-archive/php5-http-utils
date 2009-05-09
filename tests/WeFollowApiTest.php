@@ -20,6 +20,17 @@ class WeFollowApiTest extends PHPUnit_Framework_TestCase {
 		
 		$this->assertNotNull($people);
 		$this->assertType('array', $people);
+		
+		$this->assertEquals(25, count($people));
+
+		// Get first person
+		$person = $people[0];
+		$this->assertNotNull($person->username);
+		$this->assertEquals('tbabinszki', $person->username);		
+		
+		// Check iterable
+		$this->assertTrue($this->api->hasNext());
+		$this->assertFalse($this->api->hasPrevious());
 	}
 }
 
