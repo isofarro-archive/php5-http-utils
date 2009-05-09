@@ -14,12 +14,37 @@ class WeFollowApi {
 		$html = $this->_getRawData($tag); 
 		//echo "TaggedPeople: "; print_r($html);
 		$pageData = $this->_scrapeTagPage($html);
-		print_r($pageData);
+		//print_r($pageData);
+
+		// Set up potential iterators
+		// TODO: check that this is a fully qualified URL
+		if (!empty($pageData->nextPage)) {
+			$this->nextUrl = $pageData->nextPage;
+		}
+		
+		if (!empty($pageData->prevPage)) {
+			$this->prevUrl = $pageData->prevPage;
+		}
 
 		return $pageData->people;
 	}
 	
+	public function hasNext() {
+		return !empty($this->nextUrl);
+	}
 	
+	public function next() {
+		return $this->getTaggedPeople($this->nextUrl);
+	}
+	
+	public function hasPrevious() {
+		return !empty($this->prevUrl);
+	}
+	
+	public function previous() {
+		return $this->getTaggedPeople($this->prevUrl);
+	}
+
 	
 	protected function _scrapeTagPage($html) {
 		$dom = $this->_parseHtml($html);
@@ -144,7 +169,7 @@ class WeFollowApi {
 			echo "It's a URL\n";
 			return $this->_getTagPage($tag);
 		} elseif (file_exists($tag)) {
-			echo "It's a file";
+			//echo "It's a file";
 			return file_get_contents($tag);
 		} else {
 			echo "ERROR: Cannot determine {$tag}\n";
