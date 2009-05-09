@@ -47,8 +47,12 @@ class HttpClient {
 		$response = $this->doRequest($request);
 		
 		if ($response->getStatus() == 200) {
-			$this->cache->cache($url, $response->getBody());
-			return $response->getBody();
+			$body = $response->getBody();
+			if (!is_null($body) && strlen($body)>0) {
+				$this->cache->cache($url, $body);
+				return $body;
+			}
+			return NULL;
 		}
 		
 		//print_r($response);
