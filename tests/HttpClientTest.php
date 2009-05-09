@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(dirname(__file__)) . '/HttpClient.php';
+require_once dirname(dirname(__file__)) . '/HttpCache.php';
 require_once dirname(dirname(__file__)) . '/HttpRequest.php';
 require_once dirname(dirname(__file__)) . '/HttpResponse.php';
 require_once dirname(dirname(__file__)) . '/HttpUtils.php';
@@ -24,7 +25,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 
 
 	public function testSimpleGet() {
-		$url = 'http://www.yahoo.com';
+		$url = 'http://www.yahoo.com/';
 		
 		$response = $this->http->getUrl($url);
 		$this->assertNotNull($response);
