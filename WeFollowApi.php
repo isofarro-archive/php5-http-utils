@@ -75,7 +75,7 @@ class WeFollowApi {
 				// Followers
 				$followerData = $tweeter->find('.follower-number', 0);
 				$followers = str_replace(',', '', $followerData->plaintext);
-				$person->followers = $followerData->plaintext;
+				$person->followers = $followers;
 				
 				// Latest Tweet
 				$tweetInfo = $tweeter->find('.latest-tweet p', 0);
