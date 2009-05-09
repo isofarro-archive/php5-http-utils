@@ -15,11 +15,13 @@ class WeFollowApiTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testGetPeople() {
-		$file = '/home/user/Documents/savedPages/wefollow-accessibility.html';
+		//$file = '/home/user/Documents/savedPages/wefollow-accessibility.html';
+		$url = 'http://wefollow.com/tag/accessibility';
 		$people = $this->api->getTaggedPeople($file);
 		
 		$this->assertNotNull($people);
 		$this->assertType('array', $people);
+		$this->assertEquals(25, count($people));
 	}
 }
 
