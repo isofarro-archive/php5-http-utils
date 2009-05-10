@@ -32,13 +32,24 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(is_string($response));
 	}
 	
+	public function testSimpleWeFollowGet() {
+		$url = 'http://wefollow.com/tag/accessibility';
+		
+		$response = $this->http->getUrl($url);
+		$this->assertNotNull($response);
+		$this->assertTrue(is_string($response));
+	}
+
+	
+
 	public function testSimpleNoRedirectGet() {
 		$url = 'http://yahoo.com/';
 		
 		$response = $this->http->getUrl($url);
+		//echo "[$response]";
 		$this->assertNull($response);
 	}
-
+	
 	public function testSimpleRedirectGet() {
 		$url = 'http://yahoo.com/';
 		

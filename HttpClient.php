@@ -17,6 +17,12 @@ class HttpClient {
 	public function __construct() {
 		$this->cache = new HttpCache();
 	}
+	
+	public function setCacheDir($dir) {
+		if (file_exists($dir) && is_dir($dir)) {
+			$this->cache->setRootDir($dir);
+		}
+	}
 
 	public function setFollowRedirect($follow) {
 		if (is_bool($follow)) {
@@ -29,10 +35,11 @@ class HttpClient {
 	}
 
 
-	public function getUrl($url) {
+	public function getUrl($url, $cache=true) {
 		// Check if there's a cached version first
 		// TODO: This is aggressive caching, modify to expire cache
-		if ($this->cache->isCached($url)) {
+		if ($cache && $this->cache->isCached($url)) {
+			echo "!";
 			return $this->cache->get($url);
 		}
 		
@@ -40,7 +47,11 @@ class HttpClient {
 		$response = $this->doRequest($request);
 		
 		if ($response->getStatus() == 200) {
-			return $response->getBody();
+			$body = $response->getBody();
+			if ($cache && !$response->isRedirected()) {
+				$this->cache->cache($url, $body);
+			}
+			return $body;
 		}
 		
 		//print_r($response);
@@ -71,6 +82,7 @@ class HttpClient {
 				//echo "Redirecting\n";
 				$request->setUrl($response->getHeader('Location'));
 				$response = $this->doRequest($request);
+				$response->setRedirected(true);
 			}
 		}
 		

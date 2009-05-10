@@ -6,9 +6,19 @@ class HttpResponse {
 	protected $statusMsg;
 	protected $headers;
 	protected $body;
+	
+	protected $redirected = false;
 
 	public function __construct() {
 		$this->headers = new HttpHeaders();	
+	}
+	
+	public function setRedirected($isRedirected) {
+		$this->redirected = $isRedirected;
+	}
+	
+	public function isRedirected() {
+		return $this->redirected;
 	}
 	
 	public function getVersion() {
