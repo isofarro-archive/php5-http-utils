@@ -19,9 +19,7 @@ class TwitterApi {
 	
 	public function getRateLimitStatus() {
 		$service = 'account/rate_limit_status';
-		$response = $this->_doTwitterApiRequest(
-			$service
-		);
+		$response = $this->_doTwitterApiRequest($service, NULL, false);
 		return $response;
 	}
 	
@@ -86,29 +84,29 @@ class TwitterApi {
 		return $friends;	
 	}
 
-	protected function _doTwitterApiRequest($service, $params=NULL) {
+	protected function _doTwitterApiRequest($service, $params=NULL, $cache=true) {
 		$url    = "{$this->twitterBase}{$service}.{$this->format}";
-		return json_decode($this->_doHttpApiRequest('GET', $url, $params));
+		return json_decode($this->_doHttpApiRequest('GET', $url, $params, $cache));
 	}
 	
-	protected function _doHttpApiRequest($method, $url, $params) {
+	protected function _doHttpApiRequest($method, $url, $params, $cache=true) {
 		if ($method=='GET') {
 			if (!empty($params)) {
 				$query = http_build_query($params);
 				$url = "{$url}?{$query}";
 			}
-			return $this->_getUrl($url);
+			return $this->_getUrl($url, $cache);
 		} else {
 			echo "ERROR: unsupported HTTP method: {$method}\n";
 			return NULL;
 		}
 	}
 	
-	protected function _getUrl($url) {
+	protected function _getUrl($url, $cache=true) {
 		if (empty($this->http)) {
 			$this->http = new HttpClient();
 		}
-		return $this->http->getUrl($url);
+		return $this->http->getUrl($url, $cache);
 	}
 	
 }

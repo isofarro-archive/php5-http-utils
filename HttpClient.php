@@ -35,10 +35,10 @@ class HttpClient {
 	}
 
 
-	public function getUrl($url) {
+	public function getUrl($url, $cache=true) {
 		// Check if there's a cached version first
 		// TODO: This is aggressive caching, modify to expire cache
-		if ($this->cache->isCached($url)) {
+		if ($cache && $this->cache->isCached($url)) {
 			echo "!";
 			return $this->cache->get($url);
 		}
@@ -48,7 +48,7 @@ class HttpClient {
 		
 		if ($response->getStatus() == 200) {
 			$body = $response->getBody();
-			if (!$response->isRedirected()) {
+			if ($cache && !$response->isRedirected()) {
 				$this->cache->cache($url, $body);
 			}
 			return $body;
