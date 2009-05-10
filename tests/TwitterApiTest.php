@@ -18,10 +18,23 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 	
 	}
 
+
 	public function testInitTwitterApi() {
 		$this->assertNotNull($this->twitter);
 
-	}	
+	}
+
+	
+	public function testRateLimitStatus() {
+		$limit = $this->twitter->getRateLimitStatus();
+
+		$this->assertNotNull($limit);
+		$this->assertNotNull($limit->hourly_limit);
+		$this->assertNotNull($limit->reset_time);
+		$this->assertNotNull($limit->reset_time_in_seconds);
+		$this->assertNotNull($limit->remaining_hits);
+		//print_r($limit);
+	}
 
 	public function testGetFriends() {
 		$username = 'isofarro_public';

@@ -13,12 +13,28 @@ class TwitterApi {
 		return 'Hello world';
 	}
 	
+	###
+	### Account services
+	###
+	
+	public function getRateLimitStatus() {
+		$service = 'account/rate_limit_status';
+		$response = $this->_doTwitterApiRequest(
+			$service
+		);
+		return $response;
+	}
+	
+	###
+	### Status services
+	###
+
 	public function getFriends($user) {
 		$service = 'statuses/friends';
 		$friends = array();
 		
 		$response = $this->_doTwitterApiRequest(
-			'statuses/friends', 
+			$service, 
 			array('id' => $user)
 		);
 		$page = 1;
@@ -77,8 +93,10 @@ class TwitterApi {
 	
 	protected function _doHttpApiRequest($method, $url, $params) {
 		if ($method=='GET') {
-			$query = http_build_query($params);
-			$url = "{$url}?{$query}";
+			if (!empty($params)) {
+				$query = http_build_query($params);
+				$url = "{$url}?{$query}";
+			}
 			return $this->_getUrl($url);
 		} else {
 			echo "ERROR: unsupported HTTP method: {$method}\n";
