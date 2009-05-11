@@ -68,7 +68,7 @@ class TwitterApi {
 			$friend->fullname    = $person->name;
 			
 			if (!empty($person->description)) {
-				$friend->bio         = $person->description;
+							$friend->bio         = $person->description;
 			}
 
 			if (!empty($person->url)) {
