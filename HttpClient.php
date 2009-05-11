@@ -112,7 +112,7 @@ class HttpClient {
 			$response = $this->_parseResponse($httpOutput);
 		} else {
 			$response = $this->_createErrorResponse($ch);
-			echo "RESPONSE: "; print_r($response);
+			//echo "RESPONSE: "; print_r($response);
 		}							
 								
 		curl_close($ch);
