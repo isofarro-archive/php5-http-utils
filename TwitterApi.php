@@ -67,15 +67,15 @@ class TwitterApi {
 			$friend->followers   = $person->followers_count;
 			$friend->fullname    = $person->name;
 			
-			if ($person->description) {
+			if (!empty($person->description)) {
 				$friend->bio         = $person->description;
 			}
 
-			if ($person->url) {
+			if (!empty($person->url)) {
 				$friend->website     = $person->url;
 			}
 
-			if ($person->status) {
+			if (!empty($person->status)) {
 				$friend->latestTweet = $person->status->text; 
 			}
 			

@@ -1,7 +1,7 @@
 <?php
 
 class HttpCache {
-	protected $rootDir = '/tmp/';
+	protected $rootDir = '/tmp/http-cache/';
 
 	public function __construct($dir=false) {
 		if ($dir) {
