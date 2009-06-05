@@ -9,11 +9,37 @@ class TwitterApi {
 	var $format = 'json';
 
 	var $http;
+	
+	// Total number of requests left
+	var $requestLimit = -1;
+
 
 	public function getRequestToken() {
 		return 'Hello world';
 	}
+
+	/**
+		getRateLimit - returns the number of requests we have left
+	**/	
+	public function getRateLimit() {
+		$response = $this->getRateLimitStatus();
+
+		// TODO: parse the response and return just the number of requests left
+		return 5;
+	}
 	
+	/**
+		hasRequests - returns true if we haven't reached the rate limit.
+	**/
+	public function hasRequests() {
+		if ($this->requestLimit<0) {
+			$this->requestLimit = $this->getRateLimit();
+		}
+		
+		return ($this->requestLimit > 0);
+	}
+
+
 	###
 	### Account services
 	###
@@ -23,6 +49,7 @@ class TwitterApi {
 		$response = $this->_doTwitterApiRequest($service, NULL, false);
 		return $response;
 	}
+
 	
 	###
 	### Status services
@@ -31,6 +58,11 @@ class TwitterApi {
 	public function getFriends($user) {
 		$service = 'statuses/friends';
 		$friends = array();
+
+		// Break out if we have no requests left
+		if (!$this->hasRequests()) {
+			return NULL;
+		}
 		
 		$response = $this->_doTwitterApiRequest(
 			$service, 
@@ -56,6 +88,11 @@ class TwitterApi {
 		return $friends;
 	}
 
+
+	##
+	## Formatting methods
+	##
+
 	protected function _formatFriends($response) {
 		$friends = array();
 		
@@ -68,7 +105,7 @@ class TwitterApi {
 			$friend->fullname    = $person->name;
 			
 			if (!empty($person->description)) {
-							$friend->bio         = $person->description;
+				$friend->bio         = $person->description;
 			}
 
 			if (!empty($person->url)) {
@@ -85,9 +122,21 @@ class TwitterApi {
 		return $friends;	
 	}
 
+
+
+	##
+	##
+	##
+
 	protected function _doTwitterApiRequest($service, $params=NULL, $cache=true) {
-		$url    = "{$this->twitterBase}{$service}.{$this->format}";
-		return json_decode($this->_doHttpApiRequest('GET', $url, $params, $cache));
+		$url      = "{$this->twitterBase}{$service}.{$this->format}";
+		$response = $this->_doHttpApiRequest('GET', $url, $params, $cache);
+
+		// TODO: need to track the cost of each type of request
+		// Could use the $service to track costs		
+		$this->requestLimit--;
+		
+		return json_decode($response);
 	}
 	
 	protected function _doHttpApiRequest($method, $url, $params, $cache=true) {
