@@ -84,6 +84,11 @@ class TwitterApi {
 		$page = 1;
 		
 		while (count($response)>0) {
+			if (!empty($response->error)) {
+				echo "ERROR: {$response->error}\n";
+				break;
+			}
+			
 			$batch = $this->_formatFriends($response);
 			$friends = array_merge($friends, $batch);
 			$page++;
