@@ -35,12 +35,11 @@ class HttpClient {
 	}
 
 
-	public function getUrl($url, $cache=true) {
+	public function getUrl($url, $useCache=true) {
 		// Check if there's a cached version first
 		// TODO: This is aggressive caching, modify to expire cache
-		if ($cache && $this->cache->isCached($url)) {
-			echo "!";
-			return $this->cache->get($url);
+		if ($useCache && $this->cache->isCached($url)) {
+			return $this->getCachedUrl($url);
 		}
 		
 		$request = new HttpRequest($url);
@@ -48,7 +47,8 @@ class HttpClient {
 		
 		if ($response->getStatus() == 200) {
 			$body = $response->getBody();
-			if ($cache && !$response->isRedirected()) {
+			if ($useCache && !$response->isRedirected()) {
+				echo '+';
 				$this->cache->cache($url, $body);
 			}
 			return $body;
@@ -58,6 +58,14 @@ class HttpClient {
 		return NULL;		
 	}
 
+	// Get the cached version of the URL - for offline use
+	public function getCachedUrl($url) {
+		if ($this->cache->isCached($url)) {
+			echo "!";
+			return $this->cache->get($url);
+		}
+		return NULL;		
+	}
 
 	public function doRequest($request) {
 		$request->_initHttpHeaders();

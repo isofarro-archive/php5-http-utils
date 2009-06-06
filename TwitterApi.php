@@ -12,7 +12,13 @@ class TwitterApi {
 	
 	// Total number of requests left
 	var $requestLimit = -1;
-
+	var $hitLimit     = false;
+	
+	// How much each service requests costs towards the rate limit
+	var $serviceCost = array(
+		'account/rate_limit_status' => 0,
+		'statuses/friends'          => 1
+	);
 
 	public function getRequestToken() {
 		return 'Hello world';
@@ -23,19 +29,19 @@ class TwitterApi {
 	**/	
 	public function getRateLimit() {
 		$response = $this->getRateLimitStatus();
-
-		// TODO: parse the response and return just the number of requests left
-		return 5;
+		return $response->remaining_hits;
 	}
 	
 	/**
 		hasRequests - returns true if we haven't reached the rate limit.
 	**/
 	public function hasRequests() {
-		if ($this->requestLimit<0) {
+		if (!$this->hitLimit && $this->requestLimit<=0) {
 			$this->requestLimit = $this->getRateLimit();
+			if ($this->requestLimit == 0) {
+				$this->hitLimit = true;
+			}
 		}
-		
 		return ($this->requestLimit > 0);
 	}
 
@@ -58,8 +64,7 @@ class TwitterApi {
 	public function getFriends($user) {
 		$service = 'statuses/friends';
 		$friends = array();
-
-		// Break out if we have no requests left
+		
 		if (!$this->hasRequests()) {
 			return NULL;
 		}
@@ -68,6 +73,18 @@ class TwitterApi {
 			$service, 
 			array('id' => $user)
 		);
+
+		if (is_null($response)) {
+			// No response received on first request
+			// Check whether its because we have no requests
+			if (!$this->hasRequests()) { 
+				// We ran out of requests
+				return NULL;
+			} else {
+				// Our user has no friends
+				return array();
+			}
+		}
 		$page = 1;
 		
 		while (count($response)>0) {
@@ -82,6 +99,11 @@ class TwitterApi {
 					'page' => $page
 				)
 			);
+
+			// Run out of requests, so return NULL
+			if (!$this->hasRequests() && is_null($response)) {
+				return NULL;
+			}
 		}
 		
 		//print_r($friends);
@@ -130,33 +152,44 @@ class TwitterApi {
 
 	protected function _doTwitterApiRequest($service, $params=NULL, $cache=true) {
 		$url      = "{$this->twitterBase}{$service}.{$this->format}";
-		$response = $this->_doHttpApiRequest('GET', $url, $params, $cache);
 
-		// TODO: need to track the cost of each type of request
-		// Could use the $service to track costs		
-		$this->requestLimit--;
-		
+		$serviceCost = $this->serviceCost[$service];
+		//echo " [{$serviceCost}<{$this->requestLimit}]";
+		if ($serviceCost==0 || ($serviceCost <= $this->requestLimit)) {
+			//echo ':';
+			$response = $this->_doHttpApiRequest('GET', $url, $params, $cache);
+			$this->requestLimit =  $this->requestLimit - $serviceCost;
+		} else {
+			//echo '=';
+			// Try an offline cache request
+			$response = $this->_doHttpApiRequest('GET', $url, $params, $cache, true);
+		}		
+
 		return json_decode($response);
 	}
 	
-	protected function _doHttpApiRequest($method, $url, $params, $cache=true) {
+	protected function _doHttpApiRequest($method, $url, $params, $cache=true, $offline=false) {
 		if ($method=='GET') {
 			if (!empty($params)) {
 				$query = http_build_query($params);
 				$url = "{$url}?{$query}";
 			}
-			return $this->_getUrl($url, $cache);
+			return $this->_getUrl($url, $cache, $offline);
 		} else {
 			echo "ERROR: unsupported HTTP method: {$method}\n";
 			return NULL;
 		}
 	}
 	
-	protected function _getUrl($url, $cache=true) {
+	protected function _getUrl($url, $cache=true, $offline=false) {
 		if (empty($this->http)) {
 			$this->http = new HttpClient();
 		}
-		return $this->http->getUrl($url, $cache);
+		if ($offline) {
+			return $this->http->getCachedUrl($url);
+		} else {
+			return $this->http->getUrl($url, $cache);
+		}
 	}
 	
 }

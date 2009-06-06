@@ -18,13 +18,24 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 	
 	}
 
-/****
 	public function testInitTwitterApi() {
 		$this->assertNotNull($this->twitter);
 
 	}
-****/
 
+	public function testRateLimit() {
+		$limit = $this->twitter->getRateLimit();
+		$this->assertType('integer', $limit);
+	}
+	
+	public function testHasRequests() {
+		$limit = $this->twitter->getRateLimit();
+		if ($limit > 0) {
+			$this->assertTrue($this->twitter->hasRequests());
+		} else {
+			$this->assertFalse($this->twitter->hasRequests());
+		}
+	}
 	
 	public function testRateLimitStatus() {
 		$limit = $this->twitter->getRateLimitStatus();
@@ -41,9 +52,36 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$friends = $this->twitter->getFriends($username);
 	
 		//print_r($friends);
-		$this->assertNotNull($friends);
-		$this->assertType('array', $friends);
-		$this->assertTrue(count($friends)>130);
+		if ($this->twitter->hasRequests()) {
+			$this->assertNotNull($friends);
+			$this->assertType('array', $friends);
+			$this->assertTrue(count($friends)>130);
+		} else {
+			$this->assertNull($friends);
+		}
+	}
+
+	public function testRateLimitedGetFriends() {
+		$usernames = array(  
+			'tbabinszki',	'WebBizCEO', 	'yenra',		'blkdykegoddess',
+			'cookiecrook',	'steno',			'afhill',	'pixeldiva'
+		);
+
+		foreach ($usernames as $username) {
+			//echo "\n{$username}: ";
+			$friends = $this->twitter->getFriends($username);
+	
+			//print_r($friends);
+			if (is_null($friends)) {
+				echo 'N';
+				$this->assertFalse($this->twitter->hasRequests());
+			} else {
+				$this->assertNotNull($friends);
+				$this->assertType('array', $friends);
+				$this->assertTrue(count($friends)>0);
+			}
+
+		}
 	}
 
 
