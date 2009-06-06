@@ -166,6 +166,7 @@ class TwitterApi {
 			$this->requestLimit =  $this->requestLimit - $serviceCost;
 		} else {
 			// Try an offline cache request
+			echo '>';
 			$response = $this->_doHttpApiRequest('GET', $url, $params, $cache, true);
 		}		
 
