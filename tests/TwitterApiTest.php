@@ -18,6 +18,7 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 	
 	}
 
+/****
 	public function testInitTwitterApi() {
 		$this->assertNotNull($this->twitter);
 
@@ -46,16 +47,19 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotNull($limit->reset_time_in_seconds);
 		$this->assertNotNull($limit->remaining_hits);
 	}
+****/
+
 
 	public function testGetFriends() {
-		$username = 'isofarro_public';
+		//$username = 'isofarro_public';
+		$username = 'AccessibleTwitr';
 		$friends = $this->twitter->getFriends($username);
 	
 		//print_r($friends);
 		if ($this->twitter->hasRequests()) {
 			$this->assertNotNull($friends);
 			$this->assertType('array', $friends);
-			$this->assertTrue(count($friends)>130);
+			//$this->assertTrue(count($friends)>130);
 		} else {
 			// Sometimes we can get a cached response - which is good
 			// TODO: Try to do this test without caching
@@ -63,6 +67,7 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+/****
 	public function testRateLimitedGetFriends() {
 		$usernames = array(  
 			'tbabinszki',	'WebBizCEO', 	'yenra',		'blkdykegoddess',
@@ -85,7 +90,7 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 
 		}
 	}
-
+****/
 
 /****	
 	public function testGetRequestToken() {

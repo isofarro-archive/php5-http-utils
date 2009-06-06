@@ -29,7 +29,10 @@ class TwitterApi {
 	**/	
 	public function getRateLimit() {
 		$response = $this->getRateLimitStatus();
-		return $response->remaining_hits;
+		if (!empty($response->remaining_hits)) {
+			return $response->remaining_hits;
+		}
+		return 0;
 	}
 	
 	/**
@@ -69,6 +72,7 @@ class TwitterApi {
 			$service, 
 			array('id' => $user)
 		);
+		//echo "Received response: "; print_r($response);
 
 		if (is_null($response)) {
 			// No response received on first request
@@ -153,15 +157,14 @@ class TwitterApi {
 
 	protected function _doTwitterApiRequest($service, $params=NULL, $cache=true) {
 		$url      = "{$this->twitterBase}{$service}.{$this->format}";
-
+		
 		$serviceCost = $this->serviceCost[$service];
+
 		//echo " [{$serviceCost}<{$this->requestLimit}]";
-		if ($serviceCost==0 || ($serviceCost <= $this->requestLimit)) {
-			//echo ':';
+		if ($service == 'account/rate_limit_status' || $this->hasRequests() || $serviceCost==0 || ($serviceCost <= $this->requestLimit)) {
 			$response = $this->_doHttpApiRequest('GET', $url, $params, $cache);
 			$this->requestLimit =  $this->requestLimit - $serviceCost;
 		} else {
-			//echo '=';
 			// Try an offline cache request
 			$response = $this->_doHttpApiRequest('GET', $url, $params, $cache, true);
 		}		

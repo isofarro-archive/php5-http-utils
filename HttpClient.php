@@ -63,6 +63,8 @@ class HttpClient {
 		if ($this->cache->isCached($url)) {
 			echo "!";
 			return $this->cache->get($url);
+		} else {
+			echo "ERROR: No cache entry for {$url} found\n";
 		}
 		return NULL;		
 	}
