@@ -65,10 +65,6 @@ class TwitterApi {
 		$service = 'statuses/friends';
 		$friends = array();
 		
-		if (!$this->hasRequests()) {
-			return NULL;
-		}
-		
 		$response = $this->_doTwitterApiRequest(
 			$service, 
 			array('id' => $user)
