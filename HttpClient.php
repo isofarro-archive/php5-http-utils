@@ -61,10 +61,11 @@ class HttpClient {
 	// Get the cached version of the URL - for offline use
 	public function getCachedUrl($url) {
 		if ($this->cache->isCached($url)) {
-			echo "!";
+			echo '!';
 			return $this->cache->get($url);
 		} else {
-			echo "ERROR: No cache entry for {$url} found\n";
+			echo '%';
+			//echo "ERROR: No cache entry for {$url} found\n";
 		}
 		return NULL;		
 	}
