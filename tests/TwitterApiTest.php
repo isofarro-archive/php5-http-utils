@@ -18,7 +18,6 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 	
 	}
 
-/****
 	public function testInitTwitterApi() {
 		$this->assertNotNull($this->twitter);
 
@@ -47,7 +46,6 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotNull($limit->reset_time_in_seconds);
 		$this->assertNotNull($limit->remaining_hits);
 	}
-****/
 
 
 	public function testGetFriends() {
