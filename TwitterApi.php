@@ -28,9 +28,13 @@ class TwitterApi {
 		getRateLimit - returns the number of requests we have left
 	**/	
 	public function getRateLimit() {
-		$response = $this->getRateLimitStatus();
-		if (!empty($response->remaining_hits)) {
-			return $response->remaining_hits;
+		if (!$this->hitLimit) {
+			$response = $this->getRateLimitStatus();
+			if (!empty($response->remaining_hits)) {
+				return $response->remaining_hits;
+			}
+			// Request failed. probably off line
+			$this->hitLimit = true;
 		}
 		return 0;
 	}
@@ -161,7 +165,8 @@ class TwitterApi {
 		$serviceCost = $this->serviceCost[$service];
 
 		//echo " [{$serviceCost}<{$this->requestLimit}]";
-		if ($service == 'account/rate_limit_status' || $this->hasRequests() || $serviceCost==0 || ($serviceCost <= $this->requestLimit)) {
+		if (	$serviceCost==0 || $this->hasRequests() 
+			|| ($serviceCost<=$this->requestLimit)) {
 			$response = $this->_doHttpApiRequest('GET', $url, $params, $cache);
 			$this->requestLimit =  $this->requestLimit - $serviceCost;
 		} else {
