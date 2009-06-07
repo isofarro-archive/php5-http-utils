@@ -22,6 +22,7 @@ class TwitterApi {
 		'statuses/friends'          => 1
 	);
 
+	// TODO: create an OAuth section for this
 	public function getRequestToken() {
 		return 'Hello world';
 	}
@@ -56,7 +57,7 @@ class TwitterApi {
 
 
 	###
-	### Account services
+	### Twitter Account services calls
 	###
 	
 	public function getRateLimitStatus() {
@@ -67,7 +68,7 @@ class TwitterApi {
 
 	
 	###
-	### Status services
+	### Twitter Status services calls
 	###
 
 	/**
@@ -154,6 +155,9 @@ class TwitterApi {
 	## Formatting methods
 	##
 	
+	/**
+		_formatTweet - formats a list of tweets into a clean data array
+	**/
 	protected function _formatTweets($response) {
 		$tweets = array();
 		
@@ -164,6 +168,9 @@ class TwitterApi {
 		return $tweets;
 	}
 	
+	/**
+		_formatTweet - formats a single tweet into a clean data object
+	**/
 	protected function _formatTweet($response) {
 		$tweet = (object) NULL;
 		$tweet->id      = $response->id;
@@ -194,6 +201,10 @@ class TwitterApi {
 		return $tweet;	
 	}
 
+
+	/**
+		_formatPeople - formats a list of people into a clean data array
+	**/
 	protected function _formatPeople($response) {
 		$friends = array();
 		
@@ -204,6 +215,9 @@ class TwitterApi {
 		return $friends;	
 	}
 	
+	/**
+		_formatPerson - formats a single user into a clean data object
+	**/
 	protected function _formatPerson($user) {
 		$person = (object) NULL;
 
@@ -253,9 +267,15 @@ class TwitterApi {
 
 
 	##
-	##
+	## HTTP request methods
 	##
 
+	/**
+		_doTwitterApiRequest is a twitter.com wrapper around the HTTP call.
+		Returns a data object that has already been json decoded.
+		Also handles the request service call cost - offsetting the rate limit.
+		It tries a cache request if there are no request credits left.
+	**/
 	protected function _doTwitterApiRequest($service, $params=NULL, $cache=true) {
 		$url  = "{$this->twitterBase}{$service}.{$this->format}";
 		
@@ -273,6 +293,18 @@ class TwitterApi {
 		return json_decode($response);
 	}
 	
+	/**
+		_doTwitterApiRequest is a search.twitter.com wrapper around the 
+		HTTP call. Returns a data object that has already been json decoded.
+	**/
+	protected function _doSearchApiRequest($service, $params=NULL, $cache=true) {
+		$url  = "{$this->searchBase}{$service}.{$this->format}";
+	
+	}
+	
+	/**
+		_doHttpApiRequest - creates the query string.
+	**/
 	protected function _doHttpApiRequest($method, $url, $params, $cache=true, $offline=false) {
 		if ($method=='GET') {
 			if (!empty($params)) {
@@ -286,6 +318,10 @@ class TwitterApi {
 		}
 	}
 	
+	/**
+		_getUrl = wraps around the HttpClient object which actions
+		the request.
+	**/
 	protected function _getUrl($url, $cache=true, $offline=false) {
 		if (empty($this->http)) {
 			$this->http = new HttpClient();
