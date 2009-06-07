@@ -16,10 +16,16 @@ class TwitterApi {
 	
 	// How much each service requests costs towards the rate limit
 	var $serviceCost = array(
-		'account/rate_limit_status' => 0,
 		
+		// Timeline methods
 		'statuses/public_timeline'  => 1,
-		'statuses/friends'          => 1
+		'statuses/user_timeline'    => 1,
+		
+		// User methods
+		'statuses/friends'          => 1,
+
+		// Account methods
+		'account/rate_limit_status' => 0
 	);
 
 	// TODO: create an OAuth section for this
@@ -57,18 +63,54 @@ class TwitterApi {
 
 
 	###
-	### Twitter Account services calls
+	### Twitter Timeline services calls
 	###
-	
-	public function getRateLimitStatus() {
-		$service = 'account/rate_limit_status';
-		$response = $this->_doTwitterApiRequest($service, NULL, false);
-		return $response;
-	}
 
+	/**
+		getPublicTimeline - gets the most recent 20 tweets on the 
+		public timeline. This is a non-caching request.
+	**/
+	public function getPublicTimeline() {
+		$service = 'statuses/public_timeline';
+		$timeline  = array();
+
+		$response = $this->_doTwitterApiRequest($service, NULL, false);
+		
+		if (!empty($response)) {
+			//print_r($response[0]);
+			$timeline = $this->_formatTweets($response);
+		}
+
+		return $timeline;
+	}
 	
+	/**
+		getUserTimeline - gets the most recent 20 tweets for the specified
+		user.
+	**/
+	public function getUserTimeline($user, $page=1) {
+		$service = 'statuses/user_timeline';
+		$timeline = array();
+
+		$response = $this->_doTwitterApiRequest(
+			$service, 
+			array(
+				'id'   => $user
+			)	
+		);
+		
+		if (!empty($response)) {
+			//print_r($response[0]);
+			$timeline = $this->_formatTweets($response);
+		}
+		
+		return $timeline;
+	}
+	
+
+
 	###
-	### Twitter Status services calls
+	### Twitter User services calls
 	###
 
 	/**
@@ -129,26 +171,18 @@ class TwitterApi {
 		return $friends;
 	}
 
-	/**
-		getPublicTimeline - gets the most recent 20 tweets on the 
-		public timeline. This is a non-caching request.
-	**/
-	public function getPublicTimeline() {
-		$service = 'statuses/public_timeline';
-		$public  = array();
 
+
+	###
+	### Twitter Account services calls
+	###
+	
+	public function getRateLimitStatus() {
+		$service = 'account/rate_limit_status';
 		$response = $this->_doTwitterApiRequest($service, NULL, false);
-		
-		if (!empty($response)) {
-			//print_r($response[0]);
-			$public = $this->_formatTweets($response);
-		}
-
-		return $public;
+		return $response;
 	}
-	
-		
-	
+
 	
 
 	##
