@@ -46,6 +46,9 @@ HTML;
 		$this->assertNotNull($cached);
 		$this->assertType('string', $cached);
 		$this->assertEquals($text, $cached);
+		
+		$this->cache->uncache($url);
+		$this->assertFalse($this->cache->isCached($url));
 	}
 
 

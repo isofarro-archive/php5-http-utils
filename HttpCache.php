@@ -36,6 +36,14 @@ class HttpCache {
 		return (bool)$ret;
 	}
 	
+	public function uncache($url) {
+		$file = $this->_getFileName($url);
+		if (file_exists($file)) {
+			return unlink($file);
+		}		
+		return false;
+	}
+	
 	public function isCached($url) {
 		$file = $this->_getFileName($url);
 		return file_exists($file);
