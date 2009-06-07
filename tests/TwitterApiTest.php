@@ -69,6 +69,7 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotNull($tweet->user->image);
 		$this->assertNotNull($tweet->user->followers);
 		$this->assertNotNull($tweet->user->friends);
+		$this->assertNotNull($tweet->user->joined);
 		
 	}
 

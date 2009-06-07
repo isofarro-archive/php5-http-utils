@@ -223,19 +223,23 @@ class TwitterApi {
 		}
 
 		if (!empty($user->location)) {
-			$person->location = $user->location; 
+			$person->location    = $user->location; 
+		}
+
+		if (!empty($user->created_at)) {
+			$person->joined      = $user->created_at;
 		}
 
 		if (!empty($user->protected)) {
-			$person->protected = $user->protected; 
+			$person->protected   = $user->protected; 
 		}
 
 		if (!empty($user->statuses_count)) {
-			$person->updates   = $user->statuses_count; 
+			$person->updates     = $user->statuses_count; 
 		}
 
 		if (!empty($user->favourites_count)) {
-			$person->favourites = $user->favourites_count; 
+			$person->favourites  = $user->favourites_count; 
 		}
 
 
