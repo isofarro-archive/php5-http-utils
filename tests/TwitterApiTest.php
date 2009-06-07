@@ -50,7 +50,7 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 ****/
 
 
-//****
+
 	public function testGetPublicTimeline() {
 		$timeline = $this->twitter->getPublicTimeline();
 		
@@ -76,7 +76,7 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotNull($tweet->user->joined);
 		
 	}
-//****/
+
 
 	public function testGetUserTimeline() {
 		$username = 'isofarro_public';
@@ -101,6 +101,14 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotNull($tweet->user->friends);
 		$this->assertNotNull($tweet->user->joined);
 		
+	}
+
+
+	public function testGetProtectedUserTimeline() {
+		$username = 'isofarro';
+		$timeline = $this->twitter->getUserTimeline($username);
+		
+		$this->assertNull($timeline);
 	}
 
 /****

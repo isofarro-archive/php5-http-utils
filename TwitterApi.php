@@ -94,12 +94,14 @@ class TwitterApi {
 
 		$response = $this->_doTwitterApiRequest(
 			$service, 
-			array(
-				'id'   => $user
-			)	
+			array('id' => $user)	
 		);
 		
-		if (!empty($response)) {
+		if (is_null($response)) {
+			//echo "WARN: A null response received\n";
+			// TODO: Allow access to a protected profile through authentication
+			return NULL;
+		} elseif (!empty($response)) {
 			//print_r($response[0]);
 			$timeline = $this->_formatTweets($response);
 		}
