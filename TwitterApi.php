@@ -17,6 +17,8 @@ class TwitterApi {
 	// How much each service requests costs towards the rate limit
 	var $serviceCost = array(
 		'account/rate_limit_status' => 0,
+		
+		'statuses/public_timeline'  => 1,
 		'statuses/friends'          => 1
 	);
 
@@ -68,6 +70,12 @@ class TwitterApi {
 	### Status services
 	###
 
+	/**
+		getFriends - returns an array of people the specified user is following.
+		This function iterates through multiple pages, returning the array
+		when all the pages have been successfully requested or retrieved from
+		cache. Otherwise it returns NULL.
+	**/
 	public function getFriends($user) {
 		$service = 'statuses/friends';
 		$friends = array();
@@ -83,6 +91,7 @@ class TwitterApi {
 			// Check whether its because we have no requests
 			if (!$this->hasRequests()) { 
 				// We ran out of requests
+				// TODO: only return NULL if we are caching
 				return NULL;
 			} else {
 				// Our user has no friends
@@ -97,7 +106,7 @@ class TwitterApi {
 				break;
 			}
 			
-			$batch = $this->_formatFriends($response);
+			$batch = $this->_formatPeople($response);
 			$friends = array_merge($friends, $batch);
 			$page++;
 
@@ -111,46 +120,130 @@ class TwitterApi {
 
 			// Run out of requests, so return NULL
 			if (!$this->hasRequests() && is_null($response)) {
+				// TODO: Only return NULL if we are caching
 				return NULL;
 			}
 		}
 		
-		//print_r($friends);
 		return $friends;
 	}
 
+	/**
+		getPublicTimeline - gets the most recent 20 tweets on the 
+		public timeline. This is a non-caching request.
+	**/
+	public function getPublicTimeline() {
+		$service = 'statuses/public_timeline';
+		$public  = array();
+
+		$response = $this->_doTwitterApiRequest($service, NULL, false);
+		
+		if (!empty($response)) {
+			//print_r($response[0]);
+			$public = $this->_formatTweets($response);
+		}
+
+		return $public;
+	}
+	
+		
+	
+	
 
 	##
 	## Formatting methods
 	##
+	
+	protected function _formatTweets($response) {
+		$tweets = array();
+		
+		foreach($response as $message) {
+			$tweets[] = $this->_formatTweet($message);
+		}
+		
+		return $tweets;
+	}
+	
+	protected function _formatTweet($response) {
+		$tweet = (object) NULL;
+		$tweet->id      = $response->id;
+		$tweet->created = $response->created_at;
+		$tweet->text    = $response->text;
+		$tweet->user    = $this->_formatPerson($response->user);
 
-	protected function _formatFriends($response) {
+		if (!empty($response->favorited)) {
+			$tweet->favourited = $response->favorited;
+		}
+
+		if (!empty($response->in_reply_to_screen_name)) {
+			$tweet->replyToUser = $response->in_reply_to_screen_name;
+		}
+
+		if (!empty($response->in_reply_to_status_id)) {
+			$tweet->replyToStatus = $response->in_reply_to_status_id;
+		}
+
+		if (!empty($response->in_reply_to_user_id)) {
+			$tweet->replyToUserId = $response->in_reply_to_user_id;
+		}
+
+		if (!empty($response->source)) {
+			$tweet->source = $response->source;
+		}
+
+		return $tweet;	
+	}
+
+	protected function _formatPeople($response) {
 		$friends = array();
 		
 		foreach($response as $person) {
-			$friend = (object) NULL;
-			
-			$friend->username    = $person->screen_name;
-			$friend->image       = $person->profile_image_url;
-			$friend->followers   = $person->followers_count;
-			$friend->fullname    = $person->name;
-			
-			if (!empty($person->description)) {
-				$friend->bio         = $person->description;
-			}
-
-			if (!empty($person->url)) {
-				$friend->website     = $person->url;
-			}
-
-			if (!empty($person->status)) {
-				$friend->latestTweet = $person->status->text; 
-			}
-			
-			$friends[] = $friend;		
+			$friends[] = $this->_formatPerson($person);
 		}
 
 		return $friends;	
+	}
+	
+	protected function _formatPerson($user) {
+		$person = (object) NULL;
+
+		$person->id        = $user->id;
+		$person->username  = $user->screen_name;
+		$person->fullname  = $user->name;
+		$person->image     = $user->profile_image_url;
+		$person->followers = $user->followers_count;
+		$person->friends   = $user->friends_count;
+
+		if (!empty($user->description)) {
+			$person->bio         = $user->description;
+		}
+
+		if (!empty($user->url)) {
+			$person->website     = $user->url;
+		}
+
+		if (!empty($user->location)) {
+			$person->location = $user->location; 
+		}
+
+		if (!empty($user->protected)) {
+			$person->protected = $user->protected; 
+		}
+
+		if (!empty($user->statuses_count)) {
+			$person->updates   = $user->statuses_count; 
+		}
+
+		if (!empty($user->favourites_count)) {
+			$person->favourites = $user->favourites_count; 
+		}
+
+
+		if (!empty($user->status)) {
+			$person->latestTweet = $user->status->text; 
+		}
+
+		return $person;
 	}
 
 
@@ -160,15 +253,14 @@ class TwitterApi {
 	##
 
 	protected function _doTwitterApiRequest($service, $params=NULL, $cache=true) {
-		$url      = "{$this->twitterBase}{$service}.{$this->format}";
+		$url  = "{$this->twitterBase}{$service}.{$this->format}";
 		
-		$serviceCost = $this->serviceCost[$service];
-
+		$cost = $this->serviceCost[$service];
 		//echo " [{$serviceCost}<{$this->requestLimit}]";
-		if (	$serviceCost==0 || $this->hasRequests() 
-			|| ($serviceCost<=$this->requestLimit)) {
+
+		if ($cost==0 || $this->hasRequests() || ($cost<=$this->requestLimit)) {
 			$response = $this->_doHttpApiRequest('GET', $url, $params, $cache);
-			$this->requestLimit =  $this->requestLimit - $serviceCost;
+			$this->requestLimit =  $this->requestLimit - $cost;
 		} else {
 			// Try an offline cache request
 			$response = $this->_doHttpApiRequest('GET', $url, $params, $cache, true);

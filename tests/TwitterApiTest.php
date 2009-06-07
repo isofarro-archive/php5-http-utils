@@ -46,6 +46,32 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertNotNull($limit->reset_time_in_seconds);
 		$this->assertNotNull($limit->remaining_hits);
 	}
+	
+	public function testGetPublicTimeline() {
+		$public = $this->twitter->getPublicTimeline();
+		
+		//print_r($public);
+		$this->assertNotNull($public);
+		$this->assertType('array', $public);
+		$this->assertEquals(20, count($public));
+		
+		//print_r($public[0]);
+		$tweet = $public[0];
+
+		$this->assertNotNull($tweet->id);
+		$this->assertNotNull($tweet->created);
+		$this->assertNotNull($tweet->text);
+
+		$this->assertNotNull($tweet->user);
+		$this->assertNotNull($tweet->user->id);
+		$this->assertNotNull($tweet->user->username);
+		$this->assertNotNull($tweet->user->fullname);
+		$this->assertNotNull($tweet->user->image);
+		$this->assertNotNull($tweet->user->followers);
+		$this->assertNotNull($tweet->user->friends);
+		
+	}
+
 
 
 	public function testGetFriends() {
@@ -65,7 +91,9 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		}
 	}
 
+
 /****
+	// This test is designed to hit the Twitter API limits, so use sparingly
 	public function testRateLimitedGetFriends() {
 		$usernames = array(  
 			'tbabinszki',	'WebBizCEO', 	'yenra',		'blkdykegoddess',
