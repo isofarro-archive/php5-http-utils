@@ -301,6 +301,38 @@ class TwitterApi {
 	}
 
 
+	protected function formatSearchResults($results) {
+		$tweets = array();
+		foreach($results as $result) {
+			$tweets[] = $this->formatSearchResult($result);
+		}
+		return $tweets;
+	}
+
+	protected function formatSearchResult($result) {
+		$tweet = (object) NULL;
+		$tweet->id      = $result->id;
+		$tweet->created = $result->created_at;
+		$tweet->text    = $result->text;
+		$tweet->user    = $result->from_user;
+
+		if (!empty($result->to_user_id)) {
+			$tweet->replyToUserId = $result->to_user_id;
+		}
+
+		if (!empty($result->iso_language_code)) {
+			$tweet->lang = $result->iso_language_code;
+		}
+
+		if (!empty($result->profile_image_url)) {
+			$tweet->user_image = $result->profile_image_url;
+		}
+
+		return $tweet;
+	}
+
+
+
 
 	##
 	## HTTP request methods
