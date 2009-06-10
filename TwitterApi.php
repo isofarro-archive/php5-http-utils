@@ -13,6 +13,9 @@ class TwitterApi {
 	// Total number of requests left
 	var $requestLimit = -1;
 	var $hitLimit     = false;
+
+	var $nextRequest;
+	var $nextService;
 	
 	// How much each service requests costs towards the rate limit
 	var $serviceCost = array(
@@ -60,6 +63,17 @@ class TwitterApi {
 		}
 		return ($this->requestLimit > 0);
 	}
+	
+	public function next() {
+		// TODO: What about rate limiting cost?
+		if (!empty($this->nextRequest)) {
+			$response = $this->_getUrl($this->nextService . $this->nextRequest);
+			if (!empty($response->next_page)) {
+				$this->nextRequest = $response->next_page;
+			}
+			return $response;
+		}
+	}
 
 
 	###
@@ -82,11 +96,27 @@ class TwitterApi {
 		
 		$response = $this->_doSearchApiRequest($service, $search);
 		$results  = $this->formatSearchResults($response->results);
+		
+		if (!empty($response->next_page)) {
+			$this->nextRequest = $response->next_page;
+			$this->nextService = $service;
+		}
+
+		//unset($response->results); print_r($response);
+		
 		return $results;
 	}
 	
-	public function searchAll() {
-	
+	public function searchAll($query) {
+		$results = $this->search($query);
+		while(!empty($this->nextRequest)) {
+			$response = $this->next();
+			if (!empty($response->results)) {
+				$newResults = $this->formatSearchResults($response->results);
+				$results = array_merge($results, $newResults);
+			}
+		}
+		return $results;
 	}
 
 
@@ -422,6 +452,7 @@ class TwitterApi {
 		the request.
 	**/
 	protected function _getUrl($url, $cache=true, $offline=false) {
+		$this->nextRequest = NULL;
 		if (empty($this->http)) {
 			$this->http = new HttpClient();
 		}
