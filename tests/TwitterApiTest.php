@@ -50,7 +50,7 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 ****/
 
 
-
+/****
 	public function testGetPublicTimeline() {
 		$timeline = $this->twitter->getPublicTimeline();
 		
@@ -109,6 +109,16 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$timeline = $this->twitter->getUserTimeline($username);
 		
 		$this->assertNull($timeline);
+	}
+****/
+
+	public function testSearchQuery() {
+		$query = 'accessibility OR a11y';
+		
+		$results = $this->twitter->search($query);
+		//print_r($results);
+		$this->assertNotNull($results);
+		$this->assertEquals(100, count($results));
 	}
 
 /****

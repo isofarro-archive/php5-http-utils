@@ -63,6 +63,35 @@ class TwitterApi {
 
 
 	###
+	### Twitter Search services calls
+	###
+	
+	public function search($query, $options=false) {
+		$service = 'search';
+		$search = array(
+			'lang' => 'en',
+			'rpp'  => 100,
+			
+		);
+		
+		if (is_array($options)) {
+			$search = array_merge($search, $options);
+		}
+		
+		$search['q'] = $query;
+		
+		$response = $this->_doSearchApiRequest($service, $search);
+		$results  = $this->formatSearchResults($response->results);
+		return $results;
+	}
+	
+	public function searchAll() {
+	
+	}
+
+
+
+	###
 	### Twitter Timeline services calls
 	###
 
@@ -368,6 +397,8 @@ class TwitterApi {
 	protected function _doSearchApiRequest($service, $params=NULL, $cache=true) {
 		$url  = "{$this->searchBase}{$service}.{$this->format}";
 	
+		$response = $this->_doHttpApiRequest('GET', $url, $params, $cache);
+		return json_decode($response);
 	}
 	
 	/**
