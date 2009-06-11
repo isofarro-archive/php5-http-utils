@@ -121,6 +121,17 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(100, count($results));
 	}
 
+	public function testSearchAll() {
+		$query = 'accessibility OR a11y';
+		
+		$results = $this->twitter->searchAll($query);
+		//print_r($results);
+		$this->assertNotNull($results);
+		$this->assertType('array', $results);
+		$this->assertType('object', $results[0]);
+		$this->assertTrue(count($results)>100);
+	}
+
 /****
 	public function testGetFriends() {
 		//$username = 'isofarro_public';

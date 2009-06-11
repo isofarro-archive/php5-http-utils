@@ -64,17 +64,6 @@ class TwitterApi {
 		return ($this->requestLimit > 0);
 	}
 	
-	public function next() {
-		// TODO: What about rate limiting cost?
-		if (!empty($this->nextRequest)) {
-			$response = $this->_getUrl($this->nextService . $this->nextRequest);
-			if (!empty($response->next_page)) {
-				$this->nextRequest = $response->next_page;
-			}
-			return $response;
-		}
-	}
-
 
 	###
 	### Twitter Search services calls
@@ -99,7 +88,7 @@ class TwitterApi {
 		
 		if (!empty($response->next_page)) {
 			$this->nextRequest = $response->next_page;
-			$this->nextService = $service;
+			$this->nextService = "{$this->searchBase}{$service}.{$this->format}";
 		}
 
 		//unset($response->results); print_r($response);
@@ -110,13 +99,28 @@ class TwitterApi {
 	public function searchAll($query) {
 		$results = $this->search($query);
 		while(!empty($this->nextRequest)) {
-			$response = $this->next();
+			$response = $this->nextSearch();
+			//print_r($response);
 			if (!empty($response->results)) {
 				$newResults = $this->formatSearchResults($response->results);
 				$results = array_merge($results, $newResults);
 			}
 		}
 		return $results;
+	}
+
+	public function nextSearch() {
+		// TODO: What about rate limiting cost?
+		if (!empty($this->nextRequest)) {
+			//echo "\n{$this->nextService}{$this->nextRequest}\n";
+			$response = $this->_getUrl($this->nextService . $this->nextRequest);
+			$response = json_decode($response);
+			if (!empty($response->next_page)) {
+				echo '&';
+				$this->nextRequest = $response->next_page;
+			}
+			return $response;
+		}
 	}
 
 
