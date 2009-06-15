@@ -1,5 +1,9 @@
 <?php
 
+/**
+	CanonicalLink finds the canonical link for any url. Keeps track
+	of link shorteners, and iframe/frames based toolbar (e.g. Digg)
+**/
 class CanonicalLink {
 	var $config;
 	var $cache;
