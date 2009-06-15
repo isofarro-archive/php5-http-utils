@@ -12,3 +12,15 @@ Planned features
 * Open Calais API
 
 
+Dependencies
+------------
+
+* *TwitterApi*: HttpClient
+* *WeFollowApi*: HttpClient, HtmlParser
+* *HttpClient*: HttpCache, HttpRequest, HttpResponse
+* *HttpRequest*: HttpUtils
+* *HttpResponse*: HttpUtils
+* *HtmlParser*: simple_html_dom
+* *HttpCache*: none
+* *HttpUtils*: none
+

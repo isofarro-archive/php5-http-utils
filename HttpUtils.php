@@ -448,4 +448,56 @@ class HttpUrl {
 	
 }
 
+/**
+	Centralised store for cache files
+**/
+class HttpUtilsConstants {
+	const TMP_DIR            = '/tmp/';
+
+	const BASE_CACHE_DIR     = '/var/cache/isolani/http-cache/';
+	const TMP_BASE_CACHE_DIR = '/tmp/http-cache/';
+	
+	const BASE_DATA_DIR     = '/home/user/data/';
+	const TMP_BASE_DATA_DIR = '/tmp/http-data/';
+
+	public function getBaseCacheDir() {
+		if (file_exists(self::BASE_CACHE_DIR) && is_dir(self::BASE_CACHE_DIR)) {
+			return self::BASE_CACHE_DIR;
+		} elseif (file_exists(self::TMP_BASE_CACHE_DIR) && 
+			is_dir(self::TMP_BASE_CACHE_DIR)) {
+			return self::TMP_BASE_CACHE_DIR;
+		} elseif (file_exists(self::TMP_DIR) && is_dir(self::TMP_DIR)) {
+			if (mkdir(self::TMP_BASE_CACHE_DIR)) {
+				return self::TMP_BASE_CACHE_DIR;
+			}
+		} 
+		return TMP_DIR;
+	}
+	
+	public function getBaseDataDir() {
+		if (file_exists(self::BASE_DATA_DIR) && is_dir(self::BASE_DATA_DIR)) {
+			return self::BASE_DATA_DIR;
+		} elseif (file_exists(self::TMP_BASE_DATA_DIR) && 
+			is_dir(self::TMP_BASE_DATA_DIR)) {
+			return self::TMP_BASE_DATA_DIR;
+		} elseif (file_exists(self::TMP_DIR) && is_dir(self::TMP_DIR)) {
+			if (mkdir(self::TMP_BASE_DATA_DIR)) {
+				return self::TMP_BASE_DATA_DIR;
+			}
+		} 
+		return TMP_DIR;
+	}
+	
+	public function initCacheDir($segment) {
+		$baseDir = self::getBaseDataDir();
+		return mkdir($cacheDir . $segment);
+	}
+
+	public function initDataDir($segment) {
+		$baseDir = self::getBaseDataDir();
+		return mkdir($baseDir . $segment);
+	}
+	
+}
+
 ?>
