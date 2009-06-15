@@ -17,7 +17,7 @@ Dependencies
 
 * *TwitterApi*: HttpClient
 * *WeFollowApi*: HttpClient, HtmlParser
-* *CanonicalLink*:
+* *CanonicalLink*: HttpCache, HttpClient, HttpRequest, HttpResponse, HttpUtils
 * *HttpClient*: HttpCache, HttpRequest, HttpResponse
 * *HttpRequest*: HttpUtils
 * *HttpResponse*: HttpUtils
