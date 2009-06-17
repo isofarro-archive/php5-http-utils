@@ -25,7 +25,7 @@ class HttpCache {
 
 
 	public function cache($url, $text) {
-		if (!is_string($text)) {
+		if (!is_string($text) && (strlen($text)>0) ) {
 			return NULL;
 		}
 		
@@ -52,7 +52,13 @@ class HttpCache {
 	public function get($url) {
 		$file = $this->_getFileName($url);
 		if (file_exists($file)) {
-			return file_get_contents($file);
+			$body = file_get_contents($file);
+			if (strlen($body>0)) { 
+				return $body;
+			} else {
+				// Delete empty cached entries
+				$this->uncache($url);
+			}
 		}
 		return NULL;
 	}

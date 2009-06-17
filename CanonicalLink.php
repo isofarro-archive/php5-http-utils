@@ -102,6 +102,7 @@ class CanonicalLink {
 	
 	protected function _saveLookup() {
 		if (count($this->lookup)>0) {
+			echo "Saving lookup\n";
 			$ser = serialize($this->lookup);
 			if (strlen($ser)>0) {
 				$res = file_put_contents($this->filePath, $ser);

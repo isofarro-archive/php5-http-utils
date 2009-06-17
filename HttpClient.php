@@ -39,7 +39,11 @@ class HttpClient {
 		// Check if there's a cached version first
 		// TODO: This is aggressive caching, modify to expire cache
 		if ($useCache && $this->cache->isCached($url)) {
-			return $this->getCachedUrl($url);
+			// Return a cached response if there's an actual body
+			$body = $this->getCachedUrl($url);
+			if ($body) {
+				return $body;
+			}
 		}
 		
 		$request = new HttpRequest($url);
@@ -47,10 +51,6 @@ class HttpClient {
 		
 		if ($response->getStatus() == 200) {
 			$body = $response->getBody();
-			if ($useCache && !$response->isRedirected()) {
-				echo '+';
-				$this->cache->cache($url, $body);
-			}
 			return $body;
 		}
 		
@@ -61,13 +61,27 @@ class HttpClient {
 	// Get the cached version of the URL - for offline use
 	public function getCachedUrl($url) {
 		if ($this->cache->isCached($url)) {
-			echo '!';
-			return $this->cache->get($url);
+			$body = $this->cache->get($url);
+			if (strlen($body)>0) {
+				echo '!';
+				return $body;
+			}
 		} else {
 			echo '%';
 			//echo "ERROR: No cache entry for {$url} found\n";
 		}
 		return NULL;		
+	}
+
+	// Check whether a URL is cached or not.	
+	public function isCachedUrl($url) {
+		if ($this->cache->isCached($url)) {
+			$body = $this->cache->get($url);
+			if (strlen($body)>0) {
+				return true;
+			}
+		}
+		return false;		
 	}
 
 	public function doRequest($request) {
@@ -77,6 +91,7 @@ class HttpClient {
 		//print_r($request);
 		switch($request->getMethod()) {
 			case 'GET':
+				// TODO: Check the cache. Wrap in a body?
 				$response = $this->doGet($request);
 				break;
 			case 'POST':
@@ -92,6 +107,7 @@ class HttpClient {
 					$response->getStatus()==302 ) {
 				//echo "Redirecting\n";
 				$request->setUrl($response->getHeader('Location'));
+				$request->setMethod('GET'); // Redirects are GET requests
 				$response = $this->doRequest($request);
 				$response->setRedirected(true);
 			}
@@ -121,6 +137,16 @@ class HttpClient {
 		//print_r($httpOutput);
 		if ($httpOutput) {
 			$response = $this->_parseResponse($httpOutput);
+			
+			// Cache the response, if there's a body
+			if ($response->getStatus() == 200) {
+				$body = $response->getBody();
+				if (strlen($body)>0) {
+					// Always cache an un-redirected response
+					$this->cache->cache($url, $body);
+				}
+			}
+			
 		} else {
 			$response = $this->_createErrorResponse($ch);
 			//echo "RESPONSE: "; print_r($response);
