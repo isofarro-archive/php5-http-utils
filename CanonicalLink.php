@@ -13,6 +13,7 @@ class CanonicalLink {
 	var $http;
 	
 	var $lookup = array();
+	var $filePath;
 
 	public function __construct($config=false) {
 		if ($config) {
@@ -29,6 +30,10 @@ class CanonicalLink {
 	}
 
 	public function getCanonicalLink($url) {
+		if (empty($this->lookup)) {
+			$this->_loadLookup();
+		}
+		
 		if (!empty($this->lookup[$url])) {
 			echo '!';
 			return $this->lookup[$url];
@@ -56,6 +61,7 @@ class CanonicalLink {
 		// Cache any canonical references found
 		if ($newUrl !== $url) {
 			$this->lookup[$url] = $newUrl;
+			$this->_saveLookup();
 		}
 		
 		// Default: return starting url
@@ -75,8 +81,37 @@ class CanonicalLink {
 	
 	protected function _init() {
 		$path = HttpUtilsConstants::initDataDir($this->config['dataDir']);
-		echo "Path: {$path}\n";
+		if ($path) {
+			echo "Path: {$path}\n";
+			$this->filePath = $path . $this->config['dataFile'];
+		} else {
+			exit("Can't initialise data directory: {$this->config['dataDir']}\n");
+		}
 	}
+	
+	protected function _loadLookup() {
+		if (file_exists($this->filePath)) {
+			$ser = file_get_contents($this->filePath);
+			if (strlen($ser)>0) {
+				$this->lookup = unserialize($ser);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	protected function _saveLookup() {
+		if (count($this->lookup)>0) {
+			$ser = serialize($this->lookup);
+			if (strlen($ser)>0) {
+				$res = file_put_contents($this->filePath, $ser);
+				return ($res!==false);
+			}
+		}
+		return false;
+	}
+	
+	
 }
 
 ?>
