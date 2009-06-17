@@ -35,7 +35,7 @@ class CanonicalLink {
 		}
 		
 		if (!empty($this->lookup[$url])) {
-			echo '!';
+			echo '@';
 			return $this->lookup[$url];
 		}
 		
@@ -54,8 +54,9 @@ class CanonicalLink {
 			
 			$newUrl = $location;
 		} else {
-			// No redirection
+			// No Http redirection
 			// TODO: Check for iframe Digg-toolbar like markup
+			$newUrl = $this->_checkNonHttpRedirect($url, $response);
 		}
 		
 		// Cache any canonical references found
@@ -67,7 +68,30 @@ class CanonicalLink {
 		// Default: return starting url
 		return $newUrl;
 	}
+
+	protected function _checkNonHttpRedirect($url, $response) {
+		$urlParts = parse_url($url);
+		$domain   = strtolower($urlParts['host']);
+		
+		switch($domain) {
+			case 'ping.fm':
+				$url = $this->_getMetaRefreshUrl($response->getBody());
+				break;
+			default:
+				echo "Domain: {$domain}\n";
+				print_r($response);
+				break;
+		}
+		return $url;
+	}
 	
+	protected function _getMetaRefreshUrl($body) {
+		if (preg_match('/content="\d+; url=([^\"]+)"/', $body, $matches)) {
+			return $matches[1];
+		} else {
+			echo "ERROR: No meta refresh found\n";
+		}
+	}
 
 	protected function _getUrl($url) {
 		if (!$this->http) {
@@ -82,7 +106,7 @@ class CanonicalLink {
 	protected function _init() {
 		$path = HttpUtilsConstants::initDataDir($this->config['dataDir']);
 		if ($path) {
-			echo "Path: {$path}\n";
+			//echo "Path: {$path}\n";
 			$this->filePath = $path . $this->config['dataFile'];
 		} else {
 			exit("Can't initialise data directory: {$this->config['dataDir']}\n");
@@ -102,7 +126,7 @@ class CanonicalLink {
 	
 	protected function _saveLookup() {
 		if (count($this->lookup)>0) {
-			echo "Saving lookup\n";
+			echo '^';
 			$ser = serialize($this->lookup);
 			if (strlen($ser)>0) {
 				$res = file_put_contents($this->filePath, $ser);
