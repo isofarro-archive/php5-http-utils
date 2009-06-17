@@ -5,7 +5,10 @@
 	of link shorteners, and iframe/frames based toolbar (e.g. Digg)
 **/
 class CanonicalLink {
-	var $config;
+	var $config = array(
+		'dataDir'  => 'canonical-link',
+		'dataFile' => 'links.ser'
+	);
 	var $cache;
 	var $http;
 	
@@ -15,11 +18,14 @@ class CanonicalLink {
 		if ($config) {
 			$this->setConfig($config);
 		}
+		$this->_init();
 	}
 	
 	public function setConfig($config) {
-		$this->config = $config;
-		$this->_init();
+		if (is_array($config)) {
+			$this->config = array_merge( $this->config, $config );
+		}
+		//$this->config = $config;
 	}
 
 	public function getCanonicalLink($url) {
@@ -68,7 +74,8 @@ class CanonicalLink {
 	}	
 	
 	protected function _init() {
-	
+		$path = HttpUtilsConstants::initDataDir($this->config['dataDir']);
+		echo "Path: {$path}\n";
 	}
 }
 

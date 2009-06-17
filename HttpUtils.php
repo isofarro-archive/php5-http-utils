@@ -489,15 +489,36 @@ class HttpUtilsConstants {
 	}
 	
 	public function initCacheDir($segment) {
-		$baseDir = self::getBaseDataDir();
-		return mkdir($cacheDir . $segment);
+		$baseDir = self::getBaseCacheDir();
+		$path    = $baseDir . $segment;
+		return self::initDir($path);		
 	}
 
 	public function initDataDir($segment) {
 		$baseDir = self::getBaseDataDir();
-		return mkdir($baseDir . $segment);
+		$path    = $baseDir . $segment;
+		return self::initDir($path);		
 	}
 	
+	public function initDir($path) {
+		$exists  = file_exists($path);
+		$isDir   = false;
+
+		if (!$exists) {
+			$exists = mkdir($path);
+		}
+		
+		if (!$exists) {
+			//exit("Can't create directory {$path}\n");
+			return NULL;
+		}
+		
+		if ($exists && is_dir($path)) {
+			return $path . '/';
+		}
+		//exit("File already exists {$path}, and isn't a directory.\n");
+		return NULL;
+	}
 }
 
 ?>
