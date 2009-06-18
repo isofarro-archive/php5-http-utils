@@ -23,8 +23,13 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		Frame-based tinyurls:
 
 	
+		* http://ow.ly/ddvW
+		* http://twurl.nl/26tc7d
+		* http://migre.me/207l
+		* http://tumblr.com/xcg1zx6jw
+		* http://tr.im/nX5J
 	
-	
+		* cli.gs
 	**/
 
 /****
