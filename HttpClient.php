@@ -143,7 +143,7 @@ class HttpClient {
 				$body = $response->getBody();
 				if (strlen($body)>0) {
 					// Always cache an un-redirected response
-					$this->cache->cache($url, $body);
+					$this->cache->cache($request->getUrl(), $body);
 				}
 			}
 			
