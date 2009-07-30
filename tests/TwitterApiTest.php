@@ -1,11 +1,11 @@
 <?php
 
 require_once dirname(dirname(__file__)) . '/TwitterApi.php';
-require_once dirname(dirname(__file__)) . '/HttpClient.php';
+require_once dirname(dirname(__file__)) . '/HttpUtils.php';
 require_once dirname(dirname(__file__)) . '/HttpCache.php';
 require_once dirname(dirname(__file__)) . '/HttpRequest.php';
 require_once dirname(dirname(__file__)) . '/HttpResponse.php';
-require_once dirname(dirname(__file__)) . '/HttpUtils.php';
+require_once dirname(dirname(__file__)) . '/HttpClient.php';
 
 class TwitterApiTest extends PHPUnit_Framework_TestCase {
 	var $twitter;

@@ -25,6 +25,7 @@ class TwitterApi {
 		'statuses/user_timeline'    => 1,
 		
 		// User methods
+		'users/show'                => 1,
 		'statuses/friends'          => 1,
 
 		// Account methods
@@ -177,6 +178,29 @@ class TwitterApi {
 	###
 	### Twitter User services calls
 	###
+
+	/**
+		getUserTimeline - gets the most recent 20 tweets for the specified
+		user.
+	**/
+	public function getUser($user) {
+		$service = 'users/show';
+
+		$response = $this->_doTwitterApiRequest(
+			$service, 
+			array('id' => $user)	
+		);
+		
+		if (is_null($response)) {
+			echo "WARN: A null response received\n";
+			return NULL;
+		} elseif (!empty($response)) {
+			//print_r($response);
+			$user = $this->_formatPerson($response);
+		}
+		
+		return $user;
+	}
 
 	/**
 		getFriends - returns an array of people the specified user is following.

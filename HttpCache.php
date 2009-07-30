@@ -46,6 +46,7 @@ class HttpCache {
 	
 	public function isCached($url) {
 		$file = $this->_getFileName($url);
+		//echo "Url: {$url}\nFile: {$file}\n";
 		return file_exists($file);
 	}
 	
