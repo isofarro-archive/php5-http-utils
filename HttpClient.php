@@ -39,13 +39,16 @@ class HttpClient {
 		// Check if there's a cached version first
 		// TODO: This is aggressive caching, modify to expire cache
 		if ($useCache && $this->cache->isCached($url)) {
+			//echo "#GET: {$url}\n";
 			// Return a cached response if there's an actual body
 			$body = $this->getCachedUrl($url);
+			//echo "Body Length: ", strlen($body), "\n";
 			if ($body) {
 				return $body;
 			}
 		}
 		
+		echo "^GET: {$url}\n";
 		$request = new HttpRequest($url);
 		$response = $this->doRequest($request);
 		
@@ -60,6 +63,7 @@ class HttpClient {
 
 	// Get the cached version of the URL - for offline use
 	public function getCachedUrl($url) {
+		//echo "cache-GET: {$url}\n";
 		if ($this->cache->isCached($url)) {
 			$body = $this->cache->get($url);
 			if (strlen($body)>0) {
@@ -68,7 +72,7 @@ class HttpClient {
 			}
 		} else {
 			echo '%';
-			//echo "ERROR: No cache entry for {$url} found\n";
+			echo "ERROR: No cache entry for {$url} found\n";
 		}
 		return NULL;		
 	}

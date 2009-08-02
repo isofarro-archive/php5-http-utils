@@ -47,14 +47,17 @@ class HttpCache {
 	public function isCached($url) {
 		$file = $this->_getFileName($url);
 		//echo "Url: {$url}\nFile: {$file}\n";
+		//echo '#';
 		return file_exists($file);
 	}
 	
 	public function get($url) {
 		$file = $this->_getFileName($url);
+		//echo "Cache-file: {$file}\n";
 		if (file_exists($file)) {
 			$body = file_get_contents($file);
-			if (strlen($body>0)) { 
+			//echo "Cache Body Length: ", strlen($body), "\n";
+			if (strlen($body) > 0) { 
 				return $body;
 			} else {
 				// Delete empty cached entries

@@ -4,7 +4,7 @@ class WeFollowApi {
 	var $http;
 	var $parser;
 	
-	var $tagBaseUrl = 'http://wefollow.com/tag/';
+	var $tagBaseUrl = 'http://wefollow.com/twitter/';
 	var $siteBase   = 'http://wefollow.com';
 
 	// Iterator methods
@@ -14,19 +14,25 @@ class WeFollowApi {
 	public function getTaggedPeople($tag) {
 		$html = $this->_getRawData($tag); 
 		//echo "TaggedPeople: "; print_r($html);
-		$pageData = $this->_scrapeTagPage($html);
-		//print_r($pageData);
+		if ($html) {
+			$pageData = $this->_scrapeTagPage($html);
+			//print_r($pageData);
 
-		// Set up potential iterators
-		if (!empty($pageData->nextPage)) {
-			$this->nextUrl = $this->siteBase . $pageData->nextPage;
+			// Set up potential iterators
+			if (!empty($pageData->nextPage)) {
+				$this->nextUrl = $this->siteBase . $pageData->nextPage;
+			}
+		
+			if (!empty($pageData->prevPage)) {
+				$this->prevUrl = $this->siteBase . $pageData->prevPage;
+			}
+
+			return $pageData->people;
+		} else {
+			echo "WARN: No followers found for {$tag}\n";
 		}
 		
-		if (!empty($pageData->prevPage)) {
-			$this->prevUrl = $this->siteBase . $pageData->prevPage;
-		}
-
-		return $pageData->people;
+		return NULL;
 	}
 	
 	public function hasNext() {
