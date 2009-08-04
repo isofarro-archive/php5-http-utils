@@ -75,7 +75,6 @@ class TwitterApi {
 		$search = array(
 			'lang' => 'en',
 			'rpp'  => 100,
-			
 		);
 		
 		if (is_array($options)) {
@@ -83,8 +82,9 @@ class TwitterApi {
 		}
 		
 		$search['q'] = $query;
+		//print_r($search);
 		
-		$response = $this->_doSearchApiRequest($service, $search);
+		$response = $this->_doSearchApiRequest($service, $search, false);
 		$results  = $this->formatSearchResults($response->results);
 		
 		if (!empty($response->next_page)) {

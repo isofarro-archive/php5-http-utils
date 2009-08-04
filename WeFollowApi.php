@@ -96,10 +96,10 @@ class WeFollowApi {
 				}
 				
 				// Website
-				$siteInfo = $tweeter->find('.other-details a', 0);
-				if ($siteInfo->href) {
-					$person->website = $siteInfo->href;
-				}
+				//$siteInfo = $tweeter->find('.other-details a', 0);
+				//if ($siteInfo->href) {
+				//	$person->website = $siteInfo->href;
+				//}
 
 
 				
