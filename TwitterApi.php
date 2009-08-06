@@ -85,20 +85,25 @@ class TwitterApi {
 		//print_r($search);
 		
 		$response = $this->_doSearchApiRequest($service, $search, false);
-		$results  = $this->formatSearchResults($response->results);
+		if (!empty($response)) {
+			$results  = $this->formatSearchResults($response->results);
 		
-		if (!empty($response->next_page)) {
-			$this->nextRequest = $response->next_page;
-			$this->nextService = "{$this->searchBase}{$service}.{$this->format}";
-		}
+			if (!empty($response->next_page)) {
+				$this->nextRequest = $response->next_page;
+				$this->nextService = "{$this->searchBase}{$service}.{$this->format}";
+			}
 
-		//unset($response->results); print_r($response);
+			//unset($response->results); print_r($response);
 		
-		return $results;
+			return $results;
+		} else {
+			echo "WARN: Invalid response received from Twitter Search API.\n";
+			return NULL;
+		}
 	}
 	
-	public function searchAll($query) {
-		$results = $this->search($query);
+	public function searchAll($query, $options=false) {
+		$results = $this->search($query, $options);
 		while(!empty($this->nextRequest)) {
 			$response = $this->nextSearch();
 			//print_r($response);

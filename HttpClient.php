@@ -51,6 +51,7 @@ class HttpClient {
 		echo "^GET: {$url}\n";
 		$request = new HttpRequest($url);
 		$response = $this->doRequest($request);
+		//print_r($response);
 		
 		if ($response->getStatus() == 200) {
 			$body = $response->getBody();
