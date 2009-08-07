@@ -490,7 +490,7 @@ class TwitterApi {
 			$this->http = new HttpClient();
 		}
 		if ($offline) {
-			echo '>';
+			echo '%';
 			return $this->http->getCachedUrl($url);
 		} else {
 			return $this->http->getUrl($url, $cache);
