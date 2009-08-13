@@ -120,7 +120,8 @@ class HttpClient {
 		
 		if ($this->followRedirects) {
 			if (	$response->getStatus()==301 ||
-					$response->getStatus()==302 ) {
+					$response->getStatus()==302 ||
+					$response->getStatus()==307) {
 				//echo "Redirecting\n";
 				$request->setUrl($response->getHeader('Location'));
 				$request->setMethod('GET'); // Redirects are GET requests

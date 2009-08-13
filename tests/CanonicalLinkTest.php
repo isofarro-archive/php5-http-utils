@@ -25,53 +25,29 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		* http://twurl.nl/26tc7d
 		* http://migre.me/207l
 		* http://tumblr.com/xcg1zx6jw
-
-
-
-
-
-		URL shorteners:
-* http://2tu.us/mbi
-* http://ad.vu/ius7
-												* http://bit.ly/bD5sm
-* http://budurl.com/usid9
-												* http://cli.gs/MPt1t
-* http://chilp.it/?de477f
-* http://digg.com/d3z0gC?t
-												* http://ff.im/5QPgf
-												* http://is.gd/1R6Xd
-* http://kl.am/1LMT
-* http://migre.me/4Hv7
-* http://ow.ly/15J4VF
-												* http://ping.fm/Oty04
-* http://shar.es/z1G3
-* http://short.to/lcj3
-* http://shortna.me/26797
-												* http://snipr.com/o4zii
-* http://su.pr/28KrB9
-* http://tcrn.ch/1V4Q
-* http://tiny.cc/ZcH0D
-												* http://tinyurl.com/n3t4h6
-												* http://tr.im/utgz
-* http://tumblr.com/xac2il097
-* http://TwitPWR.com/mP0/
-												* http://twitthis.com/qiaex4
-												* http://twitzap.com/u/VmA
-												* http://twurl.nl/3xv6kx
-												* http://url.ie/25u7
-												* http://url4.eu/9aZb
-												* http://zz.gd/396381
-
-		
+		* http://su.pr/28KrB9 -- StumbleUpon
+		* http://ad.vu/ius7
+		* http://digg.com/educational/The_American_Textbook_Accessibility_Act_Anyone
 	**/
 
+/****
+	public function testIsUrl() {
+		$url      = '';
+		$endUrl   = '';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+****/
+
+
+//****
 	public function testNormalUrl() {
 		$url = 'http://www.isolani.co.uk/';
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($url, $canonUrl);
 	}
 
-	public function testTinyUrl() {
+	public function testTinyurlUrl() {
 		$url      = 'http://tinyurl.com/qyx9uu';
 		$endUrl   = 'http://www.isolani.co.uk/blog/web/YahooOpenHackLondon2009';
 		$canonUrl = $this->canon->getCanonicalLink($url);
@@ -181,14 +157,107 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 	}
 
 
-/****
-	public function testIsUrl() {
-		$url      = '';
-		$endUrl   = '';
+	public function testIsTwitPwrUrl() {
+		$url      = 'http://TwitPWR.com/mP0/';
+		$endUrl   = 'http://www.merttol.com/articles/web/find-out-about-the-accessibility-standards.html';
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($endUrl, $canonUrl);
 	}
-****/
+
+	public function testIsTumblrUrl() {
+		$url      = 'http://tumblr.com/xac2il097';
+		$endUrl   = 'http://koikoo.tumblr.com/post/152145547/twitter-hopes-to-improve-user-accessibility-with';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsTinyCcUrl() {
+		$url      = 'http://tiny.cc/ZcH0D';
+		$endUrl   = 'https://secure2.convio.net/appf/site/SPageServer?pagename=Petition_to_HIT_PC&JServSessionIdr011=ob80gcjlw6.app2b';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsTcrnChUrl() {
+		$url      = 'http://tcrn.ch/1V4Q';
+		$endUrl   = 'http://www.techcrunch.com/2009/07/29/microsoft-yahoo-search-deal-the-official-press-release/?awesm=tcrn.ch_1V4Q&utm_campaign=techcrunch&utm_medium=tcrn.ch-copypaste&utm_source=direct-tcrn.ch&utm_content=shorturl';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsSuPrUrl() {
+		// Stumbleupon frameset
+		$url      = 'http://su.pr/28KrB9';
+		//$endUrl   = 'http://www.stumbleupon.com/s/#28KrB9/www.uxbooth.com/blog/5-tools-to-increase-accessibility//';
+		$endUrl   = 'http://www.uxbooth.com/blog/5-tools-to-increase-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsShortnaMeUrl() {
+		$url      = 'http://shortna.me/26797';
+		$endUrl   = 'http://www.washingtonpost.com/wp-dyn/content/article/2009/08/05/AR2009080504065.html?hpid=moreheadlines&FORM=ZZNR';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsShortToUrl() {
+		$url      = 'http://short.to/lcj3';
+		$endUrl   = 'http://www.uxbooth.com/blog/5-tools-to-increase-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsUrl() {
+		$url      = 'http://shar.es/z1G3';
+		$endUrl   = 'http://www.uxbooth.com/blog/5-tools-to-increase-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsSharEsUrl() {
+		$url      = 'http://shar.es/z1G3';
+		$endUrl   = 'http://www.uxbooth.com/blog/5-tools-to-increase-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsMigreMeUrl() {
+		$url      = 'http://migre.me/4Hv7';
+		$endUrl   = 'http://juicystudio.com/article/requiring-alt-attribute-html5.php';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsKlAmUrl() {
+		$url      = 'http://kl.am/1LMT';
+		$endUrl   = 'http://www.uxbooth.com/blog/5-tools-to-increase-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsChilpItUrl() {
+		$url      = 'http://chilp.it/?de477f';
+		$endUrl   = 'http://www.uxbooth.com/blog/5-tools-to-increase-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+	
+	public function testIsBudurlUrl() {
+		$url      = 'http://budurl.com/usid9';
+		$endUrl   = 'http://hci-hyderabad.org/usid2009/index.htm';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIs2tuUsUrl() {
+		$url      = 'http://2tu.us/mbi';
+		$endUrl   = 'http://cacm.acm.org/magazines/2009/8/34496-a-blind-persons-interactions-with-technology/fulltext';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+//****/
+
 
 	
 /****

@@ -47,11 +47,11 @@ class CanonicalLink {
 		// TODO: Gauge which type of redirects url shorteners use
 		if ($response->isClientError()) {
 			return NULL;
-		} elseif ($status==301 || $status==302) {
+		} elseif ($status==301 || $status==302 || $status==307) {
 			// Redirection taking place
 			//echo "Response: "; print_r($response);
 			$location = $response->getHeader('Location');
-			echo "Response redirecting to: {$location}\n";
+			//echo "Response redirecting to: {$location}\n";
 			
 			// TODO: Keep following the redirection until we arrive at
 			//			a non-redirecting page
