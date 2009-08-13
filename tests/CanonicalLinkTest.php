@@ -25,6 +25,9 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		* http://twurl.nl/26tc7d
 		* http://migre.me/207l
 		* http://tumblr.com/xcg1zx6jw
+
+
+
 		* http://tr.im/nX5J
 	
 
@@ -46,12 +49,12 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 * http://shar.es/z1G3
 * http://short.to/lcj3
 * http://shortna.me/26797
-* http://snipr.com/o4zii
+												* http://snipr.com/o4zii
 * http://su.pr/28KrB9
 * http://tcrn.ch/1V4Q
 * http://tiny.cc/ZcH0D
 												* http://tinyurl.com/n3t4h6
-* http://tr.im/utgz
+												* http://tr.im/utgz
 * http://tumblr.com/xac2il097
 * http://TwitPWR.com/mP0/
 * http://twitthis.com/qiaex4)
@@ -101,7 +104,42 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($endUrl, $canonUrl);
 	}
+	
+	public function testIsSniprUrl() {
+		$url      = 'http://snipr.com/o4zii';
+		$endUrl   = 'http://www.uxbooth.com/blog/5-tools-to-increase-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+	
+	public function testIsTrImUrl() {
+		$url      = 'http://tr.im/vl2O';
+		$endUrl   = 'http://webaim.org/projects/steppingstones/cognitiveresearch';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+	
 
+	public function testIsSnurlUrl() {
+		$url      = 'http://snurl.com/olpjb';
+		$endUrl   = 'http://www.stc-access.org/2009/08/01/a-whole-lotta-html5-love/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	
+
+
+/****
+	public function testIsUrl() {
+		$url      = '';
+		$endUrl   = '';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+****/
+
+	
 /****
 	public function testMultipleRedirectUrl() {
 		$url      = 'http://ping.fm/lzYNA';
