@@ -21,30 +21,28 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 	
 	/**
 		Frame-based tinyurls:
-
-	
 		* http://ow.ly/ddvW
 		* http://twurl.nl/26tc7d
 		* http://migre.me/207l
 		* http://tumblr.com/xcg1zx6jw
 		* http://tr.im/nX5J
 	
-		* cli.gs
-		
+
+
 		URL shorteners:
 * http://2tu.us/mbi
 * http://ad.vu/ius7
-* http://bit.ly/bD5sm
+												* http://bit.ly/bD5sm
 * http://budurl.com/usid9
 * http://cli.gs/MPt1t
 * http://chilp.it/?de477f
 * http://digg.com/d3z0gC?t
 * http://ff.im/5QPgf
-* http://is.gd/1R6Xd
+												* http://is.gd/1R6Xd
 * http://kl.am/1LMT
 * http://migre.me/4Hv7
 * http://ow.ly/15J4VF
-* http://ping.fm/Oty04
+												* http://ping.fm/Oty04
 * http://shar.es/z1G3
 * http://short.to/lcj3
 * http://shortna.me/26797
@@ -52,7 +50,7 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 * http://su.pr/28KrB9
 * http://tcrn.ch/1V4Q
 * http://tiny.cc/ZcH0D
-* http://tinyurl.com/n3t4h6
+												* http://tinyurl.com/n3t4h6
 * http://tr.im/utgz
 * http://tumblr.com/xac2il097
 * http://TwitPWR.com/mP0/

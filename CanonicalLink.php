@@ -43,7 +43,11 @@ class CanonicalLink {
 		$response = $this->_getUrl($url);
 		$status = $response->getStatus();
 		
-		if ($status==301 || $status==302) {
+		// TODO: treat permanent and temporary redirects separately
+		// TODO: Gauge which type of redirects url shorteners use
+		if ($response->isClientError()) {
+			return NULL;
+		} elseif ($status==301 || $status==302) {
 			// Redirection taking place
 			//echo "Response: "; print_r($response);
 			$location = $response->getHeader('Location');
@@ -60,7 +64,7 @@ class CanonicalLink {
 		}
 		
 		// Cache any canonical references found
-		if ($newUrl !== $url) {
+		if (!is_null($newUrl) && $newUrl !== $url) {
 			$this->lookup[$url] = $newUrl;
 			$this->_saveLookup();
 		}
@@ -80,17 +84,19 @@ class CanonicalLink {
 			default:
 				echo "Domain: {$domain}\n";
 				print_r($response);
+				$url = NULL;
 				break;
 		}
 		return $url;
 	}
 	
 	protected function _getMetaRefreshUrl($body) {
-		if (preg_match('/content="\d+; url=([^\"]+)"/', $body, $matches)) {
+		if (preg_match('/content="\d+; ?url=([^\"]+)"/', $body, $matches)) {
 			return $matches[1];
 		} else {
 			echo "ERROR: No meta refresh found\n";
 		}
+		return NULL;
 	}
 
 	protected function _getUrl($url) {

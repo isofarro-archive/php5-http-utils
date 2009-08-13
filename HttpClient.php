@@ -110,6 +110,13 @@ class HttpClient {
 				echo 'WARN: ', $request->getMethod(), " not implemented.\n";
 				break;		
 		}
+
+		if (!empty($response)) {
+			if (	$response->getStatus()==502 
+				&& $response->getStatusMsg()=='CURL Error') {
+					$response->setClientError(true);
+			}
+		}
 		
 		if ($this->followRedirects) {
 			if (	$response->getStatus()==301 ||

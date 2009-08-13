@@ -9,6 +9,7 @@ class TwitterApi {
 	var $format = 'json';
 
 	var $http;
+	var $canonicalLink;
 	
 	// Total number of requests left
 	var $requestLimit = -1;
@@ -35,6 +36,14 @@ class TwitterApi {
 	// TODO: create an OAuth section for this
 	public function getRequestToken() {
 		return 'Hello world';
+	}
+
+	/**
+		Get the canonical link - using CanonicalLink
+	**/
+	public function getCanonicalLink($link) {
+		$this->_initCanonicalLink();
+		return $this->canonicalLink->getCanonicalLink($link);
 	}
 
 	/**
@@ -302,7 +311,7 @@ class TwitterApi {
 	protected function _formatTweet($response) {
 		$tweet = (object) NULL;
 		$tweet->id      = $response->id;
-		$tweet->created = $response->created_at;
+		$tweet->created = strtotime($response->created_at);
 		$tweet->text    = $response->text;
 		$tweet->user    = $this->_formatPerson($response->user);
 
@@ -369,7 +378,7 @@ class TwitterApi {
 		}
 
 		if (!empty($user->created_at)) {
-			$person->joined      = $user->created_at;
+			$person->joined      = strtotime($user->created_at);
 		}
 
 		if (!empty($user->protected)) {
@@ -404,7 +413,7 @@ class TwitterApi {
 	protected function formatSearchResult($result) {
 		$tweet = (object) NULL;
 		$tweet->id      = $result->id;
-		$tweet->created = $result->created_at;
+		$tweet->created = strtotime($result->created_at);
 		$tweet->text    = $result->text;
 		$tweet->user    = $result->from_user;
 
@@ -495,6 +504,13 @@ class TwitterApi {
 		} else {
 			return $this->http->getUrl($url, $cache);
 		}
+	}
+	
+	protected function _initCanonicalLink() {
+		if (!class_exists("CanonicalLink")) {
+			require_once dirname(__FILE__) . '/CanonicalLink.php';
+		}
+		$this->canonicalLink = new CanonicalLink();
 	}
 	
 }

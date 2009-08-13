@@ -7,7 +7,8 @@ class HttpResponse {
 	protected $headers;
 	protected $body;
 	
-	protected $redirected = false;
+	protected $redirected  = false;
+	protected $clientError = false;
 
 	public function __construct() {
 		$this->headers = new HttpHeaders();	
@@ -21,6 +22,14 @@ class HttpResponse {
 		return $this->redirected;
 	}
 	
+	public function setClientError($isClientError) {
+		$this->clientError = $isClientError;
+	}
+	
+	public function isClientError() {
+		return $this->clientError;
+	}
+
 	public function getVersion() {
 		return $this->version;
 	}

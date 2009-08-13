@@ -368,7 +368,7 @@ class HttpUrl {
 			$this->host     = $urlParts['host'];
 			$this->port     = empty($urlParts['port'])?'':$urlParts['port'];
 		}
-		$this->path     = $urlParts['path'];
+		$this->path     = empty($urlParts['path'])?'':$urlParts['path'];
 		$this->fragment = empty($urlParts['fragment'])?'':$urlParts['fragment'];
 		
 		if (!empty($urlParts['query'])) {
