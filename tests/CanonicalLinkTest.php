@@ -28,8 +28,6 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 
 
 
-		* http://tr.im/nX5J
-	
 
 
 		URL shorteners:
@@ -37,10 +35,10 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 * http://ad.vu/ius7
 												* http://bit.ly/bD5sm
 * http://budurl.com/usid9
-* http://cli.gs/MPt1t
+												* http://cli.gs/MPt1t
 * http://chilp.it/?de477f
 * http://digg.com/d3z0gC?t
-* http://ff.im/5QPgf
+												* http://ff.im/5QPgf
 												* http://is.gd/1R6Xd
 * http://kl.am/1LMT
 * http://migre.me/4Hv7
@@ -57,26 +55,22 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 												* http://tr.im/utgz
 * http://tumblr.com/xac2il097
 * http://TwitPWR.com/mP0/
-* http://twitthis.com/qiaex4)
-* http://twitzap.com/u/VmA
-* http://twurl.nl/3xv6kx
-* http://url.ie/25u7
-* http://url4.eu/9aZb
-* http://vimeo.com/5810449.
-* http://yfrog.com/6wg8tj
-* http://zz.gd/396381
+												* http://twitthis.com/qiaex4
+												* http://twitzap.com/u/VmA
+												* http://twurl.nl/3xv6kx
+												* http://url.ie/25u7
+												* http://url4.eu/9aZb
+												* http://zz.gd/396381
 
 		
 	**/
 
-/****
 	public function testNormalUrl() {
 		$url = 'http://www.isolani.co.uk/';
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($url, $canonUrl);
 	}
-****/
-	
+
 	public function testTinyUrl() {
 		$url      = 'http://tinyurl.com/qyx9uu';
 		$endUrl   = 'http://www.isolani.co.uk/blog/web/YahooOpenHackLondon2009';
@@ -128,6 +122,63 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 	}
 
 	
+	public function testIsCliGsUrl() {
+		$url      = 'http://cli.gs/MPt1t';
+		$endUrl   = 'http://blog.gingertech.net/2009/07/29/first-experiments-with-itext/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsFfImUrl() {
+		$url      = 'http://ff.im/5QPgf';
+		$endUrl   = 'http://friendfeed.com/scobleizer/49428cdf/why-and-are-full-of-it-about-twitter-vs';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsZzGdUrl() {
+		// 302 Multiple redirects
+		$url      = 'http://zz.gd/396381';
+		$endUrl   = 'http://htmlcssjavascript.com/html/sometimes-dreamweaver-surprises-me-great-accessibility-enhancement/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsUrl4EuUrl() {
+		// 302 Redirects
+		$url      = 'http://url4.eu/9aZb';
+		$endUrl   = 'http://rss2twitter.com';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsUrlIeUrl() {
+		$url      = 'http://url.ie/25u7';
+		$endUrl   = 'http://blog.gingertech.net/2009/08/03/aspects-of-video-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsTwurlNlUrl() {
+		$url      = 'http://twurl.nl/3xv6kx';
+		$endUrl   = 'http://www.uxbooth.com/blog/5-tools-to-increase-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsTwitzapUrl() {
+		$url      = 'http://twitzap.com/u/VmA';
+		$endUrl   = 'http://www.bbc.co.uk/ouch/messageboards/F2322273?thread=6790842&latest=1#p83495761';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
+	public function testIsTwitthisUrl() {
+		$url      = 'http://twitthis.com/qiaex4';
+		$endUrl   = 'http://www.uxbooth.com/blog/5-tools-to-increase-accessibility/';
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		$this->assertEquals($endUrl, $canonUrl);
+	}
 
 
 /****

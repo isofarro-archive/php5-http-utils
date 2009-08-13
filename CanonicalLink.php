@@ -29,7 +29,7 @@ class CanonicalLink {
 		//$this->config = $config;
 	}
 
-	public function getCanonicalLink($url) {
+	public function getCanonicalLink($url, $follow=true) {
 		if (empty($this->lookup)) {
 			$this->_loadLookup();
 		}
@@ -51,10 +51,16 @@ class CanonicalLink {
 			// Redirection taking place
 			//echo "Response: "; print_r($response);
 			$location = $response->getHeader('Location');
-			//echo "Response redirecting to: {$location}\n";
+			echo "Response redirecting to: {$location}\n";
 			
 			// TODO: Keep following the redirection until we arrive at
 			//			a non-redirecting page
+			if ($follow) {
+				$newLocation = $this->getCanonicalLink($location);
+				if (!is_null($newLocation) && $newLocation!=$location) {
+					$location = $newLocation;
+				}
+			}
 			
 			$newUrl = $location;
 		} else {
@@ -67,6 +73,10 @@ class CanonicalLink {
 		if (!is_null($newUrl) && $newUrl !== $url) {
 			$this->lookup[$url] = $newUrl;
 			$this->_saveLookup();
+		}
+		
+		if (is_null($newUrl)) {
+			return $url;
 		}
 		
 		// Default: return starting url
@@ -83,7 +93,7 @@ class CanonicalLink {
 				break;
 			default:
 				echo "Domain: {$domain}\n";
-				print_r($response);
+				//print_r($response);
 				$url = NULL;
 				break;
 		}
