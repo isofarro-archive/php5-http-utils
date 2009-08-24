@@ -33,7 +33,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testSimpleWeFollowGet() {
-		$url = 'http://wefollow.com/tag/accessibility';
+		$url = 'http://wefollow.com/twitter/accessibility';
 		
 		$response = $this->http->getUrl($url);
 		$this->assertNotNull($response);

@@ -20,7 +20,16 @@ class WeFollowApi {
 
 			// Set up potential iterators
 			if (!empty($pageData->nextPage)) {
+				//echo "NEXTPAGE: {$pageData->nextPage}\n";
 				$this->nextUrl = $this->siteBase . $pageData->nextPage;
+				
+				## Deal with current borkedness of wefollow pagination
+				if (strpos($this->nextUrl, 'twitter//page')!==false) {
+					$realTag = $this->_getRawTag($tag);
+					//echo "WARN: Next URL doesn't contain tag ($realTag) [{$this->nextUrl}]\n";
+					$this->nextUrl = str_replace('twitter//page', "twitter/{$realTag}/page", $this->nextUrl);
+					//echo "WARN: Changed next URL to [{$this->nextUrl}]\n";
+				}
 			}
 		
 			if (!empty($pageData->prevPage)) {
@@ -176,11 +185,25 @@ class WeFollowApi {
 			//echo "It's a partial tag\n";
 			return $this->_getTagPage($tag);
 		} elseif (file_exists($tag)) {
-			//echo "It's a file";
+			echo "It's a file";
 			return file_get_contents($tag);
 		} elseif (preg_match('/^http\:\/\//', $tag)) {
 			//echo "Has full url: [{$tag}]\n";
 			return $this->_getUrl($tag);
+		} else {
+			echo "ERROR: Cannot determine urltype: [{$tag}]\n";
+		}
+	}
+	
+	protected function _getRawTag($tag) {
+		//echo "INFO: Retrieve RawTag for {$tag}\n";
+		if (preg_match('/^(\w+)$/', $tag, $matches)) {
+			//echo "It's a partial tag\n";
+			return $matches[1];
+		} elseif (file_exists($tag)) {
+			return NULL;
+		} elseif (preg_match('/^http:\/\/wefollow.com\/twitter\/([^\/]+)/', $tag, $matches)) {
+			return $matches[1];
 		} else {
 			echo "ERROR: Cannot determine urltype: [{$tag}]\n";
 		}

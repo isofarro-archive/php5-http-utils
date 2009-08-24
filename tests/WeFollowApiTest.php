@@ -19,11 +19,11 @@ class WeFollowApiTest extends PHPUnit_Framework_TestCase {
 	
 	}
 	
-	
+/****	
 	public function testGetPeople() {
 		//$file = '/home/user/Documents/savedPages/wefollow-accessibility.html';
 		//$file = '/home/isofarro/Documents/savedPages/wefollow-accessibility.html';
-		$url = 'http://wefollow.com/tag/accessibility';
+		$url = 'http://wefollow.com/twitter/accessibility';
 		$people = $this->api->getTaggedPeople($url);
 		
 		$this->assertNotNull($people);
@@ -39,23 +39,39 @@ class WeFollowApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($this->api->hasNext());
 		$this->assertFalse($this->api->hasPrevious());
 	}
+****/
 
 	public function testIteratePeople() {
-		$tag = 'accessibility';
+		$tag  = 'accessibility';
+		$list = array();
+		
 		$people = $this->api->getTaggedPeople($tag);
 
 		$this->assertNotNull($people);
 		$this->assertType('array', $people);
 		$this->assertEquals(25, count($people));
+		$list = array_merge($list, $people);
 	
 		// Check iterable
 		$this->assertTrue($this->api->hasNext());
 
 		$people = $this->api->next();
+		$list = array_merge($list, $people);
 
 		$this->assertNotNull($people);
 		$this->assertType('array', $people);
-		$this->assertEquals(25, count($people));
+		$this->assertEquals(50, count($list));
+
+		// Check iterable
+		$this->assertTrue($this->api->hasNext());
+		
+		while($this->api->hasNext()) {
+			$people = $this->api->next();
+			$list = array_merge($list, $people);
+		}
+
+		$this->assertTrue(count($list)>50);
+
 	}
 
 
