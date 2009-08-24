@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(dirname(__file__)) . '/HttpCache.php';
+require_once dirname(dirname(__file__)) . '/HttpUtils.php';
 
 class HttpCacheTest extends PHPUnit_Framework_TestCase {
 	protected $cache;

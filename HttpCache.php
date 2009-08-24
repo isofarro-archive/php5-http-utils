@@ -2,14 +2,13 @@
 
 class HttpCache {
 	##protected $rootDir = '/tmp/http-cache/';
-	protected $rootDir = '/var/cache/isolani/http-cache/';
-	protected $altRootDir = '/tmp/http-cache/';
+	protected $rootDir;
 
 	public function __construct($dir=false) {
 		if ($dir) {
 			$this->setRootDir($dir);
 		} else {
-			$this->_initDefaultCacheDir();
+			$this->rootDir = HttpUtilsConstants::getBaseCacheDir();
 		}
 	}
 
@@ -100,20 +99,6 @@ class HttpCache {
 			}				
 		}
 		return true;
-	}
-
-	protected function _initDefaultCacheDir() {
-		if (file_exists($this->rootDir)) {
-			return;
-		}
-
-		if (!file_exists($this->altRootDir)) {
-			$ret = mkdir($this->altRootDir, 0777, true);
-			if (!$ret) {
-				echo "ERROR: Can't create a cache at {$this->altRootDir}\n";
-			}
-		}
-		$this->rootDir = $this->altRootDir;
 	}
 
 }

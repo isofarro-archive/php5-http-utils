@@ -48,7 +48,7 @@ class HttpClient {
 			}
 		}
 		
-		echo "^GET: {$url}\n";
+		//echo "^GET: {$url}\n";
 		$request = new HttpRequest($url);
 		$response = $this->doRequest($request);
 		//print_r($response);
@@ -59,7 +59,7 @@ class HttpClient {
 		} elseif($response->getStatus()==302) {
 			echo "Temporary redirect to: ", $response->getHeader('Location'), "\n";
 		} else {
-			echo "Status returned: ", $response->getStatus(), " \n";
+			//echo "Status returned: ", $response->getStatus(), " \n";
 		}
 		
 		//print_r($response);
