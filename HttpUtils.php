@@ -463,7 +463,7 @@ class HttpUtilsConstants {
 	const BASE_DATA_DIR     = '/home/user/data/';
 	const TMP_BASE_DATA_DIR = '/tmp/http-data/';
 
-	public function getBaseCacheDir() {
+	public static function getBaseCacheDir() {
 		if (self::$baseCacheDir) {
 			return self::$baseCacheDir;
 		} elseif (file_exists(self::BASE_CACHE_DIR) && is_dir(self::BASE_CACHE_DIR)) {
@@ -479,7 +479,7 @@ class HttpUtilsConstants {
 		return TMP_DIR;
 	}
 	
-	public function setBaseCacheDir($dir) {
+	public static function setBaseCacheDir($dir) {
 		if (file_exists($dir) && is_dir($dir)) {
 			self::$baseCacheDir = $dir;
 			return true;
@@ -487,7 +487,7 @@ class HttpUtilsConstants {
 		return false;
 	}
 	
-	public function getBaseDataDir() {
+	public static function getBaseDataDir() {
 		if (self::$baseDataDir) {
 			return self::$baseDataDir;
 		} elseif (file_exists(self::BASE_DATA_DIR) && is_dir(self::BASE_DATA_DIR)) {
@@ -503,7 +503,7 @@ class HttpUtilsConstants {
 		return TMP_DIR;
 	}
 	
-	public function setBaseDataDir($dir) {
+	public static function setBaseDataDir($dir) {
 		if (file_exists($dir) && is_dir($dir)) {
 			self::$baseDataDir = $dir;
 			return true;
@@ -511,19 +511,19 @@ class HttpUtilsConstants {
 		return false;
 	}
 	
-	public function initCacheDir($segment) {
+	public static function initCacheDir($segment) {
 		$baseDir = self::getBaseCacheDir();
 		$path    = $baseDir . $segment;
 		return self::initDir($path);		
 	}
 
-	public function initDataDir($segment) {
+	public static function initDataDir($segment) {
 		$baseDir = self::getBaseDataDir();
 		$path    = $baseDir . $segment;
 		return self::initDir($path);		
 	}
 	
-	public function initDir($path) {
+	public static function initDir($path) {
 		$exists  = file_exists($path);
 		$isDir   = false;
 
