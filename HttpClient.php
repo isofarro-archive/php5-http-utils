@@ -48,7 +48,8 @@ class HttpClient {
 			}
 		}
 		
-		//echo "^GET: {$url}\n";
+		echo '^';
+		//echo "GET: {$url}\n";
 		$request = new HttpRequest($url);
 		$response = $this->doRequest($request);
 		//print_r($response);

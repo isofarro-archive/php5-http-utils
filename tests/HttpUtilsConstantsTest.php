@@ -3,14 +3,22 @@
 require_once dirname(dirname(__FILE__)) . '/HttpUtils.php';
 
 class HttpUtilsConstantsTest extends PHPUnit_Framework_TestCase {
-	
-	function tearDown() {
-		$dirs = array('/tmp/unit-test-cache/', '/tmp/unit-test-data/');
-		foreach($dirs as $dir) {
-			if (!empty($dir) && is_dir($dir)) {
-				rmdir($dir);
+	var $dirs = array('/tmp/unit-test-cache/', '/tmp/unit-test-data/');
+
+	function setUp() {
+		foreach($this->dirs as $dir) {
+			if (!empty($dir) && !is_dir($dir)) {
+				mkdir($dir);
 			}
 		}
+	}
+	
+	function tearDown() {
+		//foreach($this->dirs as $dir) {
+		//	if (!empty($dir) && is_dir($dir)) {
+		//		rmdir($dir);
+		//	}
+		//}
 	}
 	
 	public function testDefaultCacheDir() {
@@ -36,12 +44,11 @@ class HttpUtilsConstantsTest extends PHPUnit_Framework_TestCase {
 	public function testCustomCacheDir() {
 		$dir = '/tmp/unit-test-cache/';
 		
-		$this->assertFalse(is_dir($dir));
-		
-		$result = HttpUtilsConstants::setBaseCacheDir($dir);
-		$this->assertFalse($result);
-		
-		mkdir($dir);
+		//$this->assertFalse(is_dir($dir));
+		//$result = HttpUtilsConstants::setBaseCacheDir($dir);
+		//$this->assertFalse($result);
+		//mkdir($dir);
+
 		$this->assertTrue(is_dir($dir));
 
 		$result = HttpUtilsConstants::setBaseCacheDir($dir);
@@ -56,12 +63,11 @@ class HttpUtilsConstantsTest extends PHPUnit_Framework_TestCase {
 	public function testCustomDataDir() {
 		$dir = '/tmp/unit-test-data/';
 		
-		$this->assertFalse(is_dir($dir));
-		
-		$result = HttpUtilsConstants::setBaseDataDir($dir);
-		$this->assertFalse($result);
-		
-		mkdir($dir);
+		//$this->assertFalse(is_dir($dir));
+		//$result = HttpUtilsConstants::setBaseDataDir($dir);
+		//$this->assertFalse($result);
+		//mkdir($dir);
+
 		$this->assertTrue(is_dir($dir));
 
 		$result = HttpUtilsConstants::setBaseDataDir($dir);

@@ -92,7 +92,8 @@ class CanonicalLink {
 				$url = $this->_getMetaRefreshUrl($response->getBody());
 				break;
 			default:
-				echo "Domain: {$domain}\n";
+				echo '§';
+				//echo "Domain: {$domain}\n";
 				//print_r($response);
 				$url = NULL;
 				break;
