@@ -1,10 +1,11 @@
 <?php
-
+/****
 interface HttpRequestBase {
 	//All the methods the request object must implement
 
 	
 }
+****/
 
 /***
 

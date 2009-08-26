@@ -404,8 +404,10 @@ class TwitterApi {
 
 	protected function formatSearchResults($results) {
 		$tweets = array();
-		foreach($results as $result) {
-			$tweets[] = $this->formatSearchResult($result);
+		if ($results) {
+			foreach($results as $result) {
+				$tweets[] = $this->formatSearchResult($result);
+			}
 		}
 		return $tweets;
 	}
