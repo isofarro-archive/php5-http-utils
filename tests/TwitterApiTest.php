@@ -112,6 +112,7 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 	}
 ****/
 
+/****
 	public function testSearchQuery() {
 		$query = 'accessibility OR a11y';
 		
@@ -130,6 +131,19 @@ class TwitterApiTest extends PHPUnit_Framework_TestCase {
 		$this->assertType('array', $results);
 		$this->assertType('object', $results[0]);
 		$this->assertTrue(count($results)>100);
+	}
+****/
+	
+	public function testSearchAllSince() {
+		$query = 'accessibility OR a11y';
+		$since = '4534306053';
+		
+		$results = $this->twitter->searchAll($query, array( 'since_id' => $since ));
+		$this->assertNotNull($results);
+		$this->assertType('array', $results);
+		$this->assertType('object', $results[0]);
+		$this->assertTrue(count($results)>100);
+		$this->assertTrue(count($results)<1500);
 	}
 
 /****

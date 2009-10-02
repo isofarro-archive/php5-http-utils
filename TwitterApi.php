@@ -112,6 +112,9 @@ class TwitterApi {
 	}
 	
 	public function searchAll($query, $options=false) {
+		$since = (!empty($options['since_id']))?$options['since_id']:0;
+		echo "Since: $since\n";
+		
 		$results = $this->search($query, $options);
 		while(!empty($this->nextRequest)) {
 			$response = $this->nextSearch();
@@ -119,6 +122,11 @@ class TwitterApi {
 			if (!empty($response->results)) {
 				$newResults = $this->formatSearchResults($response->results);
 				$results = array_merge($results, $newResults);
+				
+				// Hack to workaround the 'since' bug in Twitter
+				$tweet = end($newResults);
+				//print_r($tweet);
+				if ($tweet->id <= $since) { break; }
 			}
 		}
 		return $results;
