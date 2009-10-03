@@ -53,6 +53,13 @@ class CanonicalLink {
 			$location = $response->getHeader('Location');
 			//echo "Response redirecting to: {$location}\n";
 			
+			if (!preg_match('/^\w+:/', $location)) {
+				echo "WARN: Relative link in HTTP redirect Location: {$location}\n";
+				$relativeUrl = new HttpUrl($url);
+				$relativeUrl->setRelativeUrl($location);
+				$location = getUrl();
+			}
+			
 			// TODO: Keep following the redirection until we arrive at
 			//			a non-redirecting page
 			if ($follow) {

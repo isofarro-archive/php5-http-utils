@@ -420,6 +420,21 @@ class HttpUrlTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	function testRelativeUrl() {
+		$startUrl    = 'http://www.XYZ.com/page/75100.html';
+		$relativeUrl = '/node/8627/?url=http://www.XYZ.com/node/75100';
+	
+		$url = new HttpUrl($startUrl);
+		$url->setRelativeUrl($relativeUrl);
+		
+		//print_r($url);
+		
+		$url2 = $url->getUrl();
+		$this->assertNotNull($url2);
+		$this->assertEquals('http://www.XYZ.com/node/8627/?url=http://www.XYZ.com/node/75100',
+		 $url2);
+	}
+
 }
 
 

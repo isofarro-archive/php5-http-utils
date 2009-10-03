@@ -113,7 +113,7 @@ class TwitterApi {
 	
 	public function searchAll($query, $options=false) {
 		$since = (!empty($options['since_id']))?$options['since_id']:0;
-		echo "Since: $since\n";
+		//echo "Since: $since\n";
 		
 		$results = $this->search($query, $options);
 		while(!empty($this->nextRequest)) {

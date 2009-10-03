@@ -318,7 +318,16 @@ class HttpUrl {
 	}
 	
 	public function setRelativeUrl($url) {
+		// Work around parse_url's bug in handing relative URLs
+		// with a query string containing a URL
+		if ( ($pos=strpos($url, '?')) !== false ) {
+			$qs  = substr($url, $pos+1);
+			$url = substr($url, 0, $pos);
+			//echo "[$qs] [$url]\n";
+		}
+		
 		$urlParts = parse_url($url);
+
 		if ($urlParts['path']) {
 			if ($urlParts['path'][0]=='/') {
 				// An absolute path
@@ -333,6 +342,12 @@ class HttpUrl {
 				}				
 				$this->path = $path . $urlParts['path'];
 				$this->_createUrl();
+			}
+
+			// Add back the query string
+			if ($qs) {
+				//echo "#";
+				$this->setQuery($qs);
 			}
 		}
 	}
