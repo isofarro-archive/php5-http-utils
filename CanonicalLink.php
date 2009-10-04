@@ -29,7 +29,7 @@ class CanonicalLink {
 		//$this->config = $config;
 	}
 
-	public function getCanonicalLink($url, $follow=true) {
+	public function getCanonicalLink($url, $follow=true, $depth=0) {
 		if (empty($this->lookup)) {
 			$this->_loadLookup();
 		}
@@ -41,7 +41,7 @@ class CanonicalLink {
 		
 		$newUrl   = $url;
 		$response = $this->_getUrl($url);
-		$status = $response->getStatus();
+		$status   = $response->getStatus();
 		
 		// TODO: treat permanent and temporary redirects separately
 		// TODO: Gauge which type of redirects url shorteners use
@@ -54,16 +54,16 @@ class CanonicalLink {
 			//echo "Response redirecting to: {$location}\n";
 			
 			if (!preg_match('/^\w+:/', $location)) {
-				echo "WARN: Relative link in HTTP redirect Location: {$location}\n";
+				//echo "WARN: Relative link in HTTP redirect Location: {$location}\n";
 				$relativeUrl = new HttpUrl($url);
 				$relativeUrl->setRelativeUrl($location);
-				$location = getUrl();
+				$location = $relativeUrl->getUrl();
 			}
 			
 			// TODO: Keep following the redirection until we arrive at
 			//			a non-redirecting page
 			if ($follow) {
-				$newLocation = $this->getCanonicalLink($location);
+				$newLocation = $this->getCanonicalLink($location, true, $depth++);
 				if (!is_null($newLocation) && $newLocation!=$location) {
 					$location = $newLocation;
 				}
