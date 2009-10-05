@@ -40,7 +40,7 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 ****/
 
 
-/****
+// ****
 	public function testNormalUrl() {
 		$url = 'http://www.isolani.co.uk/';
 		$canonUrl = $this->canon->getCanonicalLink($url);
@@ -180,7 +180,7 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 
 	public function testIsTcrnChUrl() {
 		$url      = 'http://tcrn.ch/1V4Q';
-		$endUrl   = 'http://www.techcrunch.com/2009/07/29/microsoft-yahoo-search-deal-the-official-press-release/?awesm=tcrn.ch_1V4Q&utm_campaign=techcrunch&utm_medium=tcrn.ch-copypaste&utm_source=direct-tcrn.ch&utm_content=shorturl';
+		$endUrl   = 'http://www.techcrunch.com/2009/07/29/microsoft-yahoo-search-deal-the-official-press-release/?awesm=tcrn.ch_1V4Q&utm_campaign=techcrunch&utm_medium=tcrn.ch-copypaste&utm_source=&utm_content=shorturl';
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($endUrl, $canonUrl);
 	}
@@ -256,18 +256,18 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($endUrl, $canonUrl);
 	}
-****/
+// ****/
 
 
 	
-/****
+// ****
 	public function testMultipleRedirectUrl() {
 		$url      = 'http://ping.fm/lzYNA';
-		$endUrl   = 'http://web.me.com/abrightman/DisabilityLand/About.html';
+		$endUrl   = 'http://web.me.com/abrightman/DisabilityLand/';
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($endUrl, $canonUrl);
 	}
-****/
+// ****/
 
 	public function testLowerCaseLocationRedirect() {
 		//echo ucwords('link-farm');
