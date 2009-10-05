@@ -27,7 +27,8 @@ class HttpHeaders {
 	}
 	
 	public function setHeader($name, $value) {
-		$pos = $this->_getHeaderPos($name);
+		$name = $this->_cleanName($name);
+		$pos  = $this->_getHeaderPos($name);
 		if (!is_null($pos)) {
 			$this->headers[$pos] = array($name, $value);
 		} else {
@@ -49,6 +50,11 @@ class HttpHeaders {
 		return array_key_exists($name, $this->headerKey);
 	}
 	
+	protected function _cleanName($name) {
+		//return ucwords($name);
+		return preg_replace('/\b([a-z])/e', "strtoupper('\\1')", $name);
+	}
+	
 	protected function _getHeaderPos($name) {
 		if ($this->hasHeader($name)) {
 			return (int)$this->headerKey[$name];
@@ -57,6 +63,7 @@ class HttpHeaders {
 	}
 	
 	protected function _addHeader($name, $value) {
+		$name = $this->_cleanName($name);
 		$this->headers[] = array($name, $value);
 		$this->_rebuildHeaderKey();
 	}

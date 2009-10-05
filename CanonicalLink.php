@@ -52,6 +52,11 @@ class CanonicalLink {
 			//echo "Response: "; print_r($response);
 			$location = $response->getHeader('Location');
 			//echo "Response redirecting to: {$location}\n";
+			if (!$location) { 
+				echo "WARN: Response Redirect Location could not be determined.\n";
+				print_r($response);
+				return; 
+			}
 			
 			if (!preg_match('/^\w+:/', $location)) {
 				//echo "WARN: Relative link in HTTP redirect Location: {$location}\n";

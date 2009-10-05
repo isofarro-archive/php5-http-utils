@@ -40,7 +40,7 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 ****/
 
 
-//****
+/****
 	public function testNormalUrl() {
 		$url = 'http://www.isolani.co.uk/';
 		$canonUrl = $this->canon->getCanonicalLink($url);
@@ -256,7 +256,7 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($endUrl, $canonUrl);
 	}
-//****/
+****/
 
 
 	
@@ -268,6 +268,17 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($endUrl, $canonUrl);
 	}
 ****/
+
+	public function testLowerCaseLocationRedirect() {
+		//echo ucwords('link-farm');
+		//echo preg_replace('/\b([a-z])/e', "strtoupper('\\1')", 'link-farm');
+		$url      = "http://tinyurl.com/nf8uml";
+		$endUrl   = 'http://www.csunconference.orgindex.cfm?EID=80000218';
+		//echo "Start link: {$url}\n";
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		//echo "CanonURL link: {$canonUrl}\n";
+		$this->assertEquals($endUrl, $canonUrl);
+	}
 
 }
 
