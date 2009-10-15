@@ -51,7 +51,7 @@ class CanonicalLink {
 			// Redirection taking place
 			//echo "Response: "; print_r($response);
 			$location = $response->getHeader('Location');
-			//echo "Response redirecting to: {$location}\n";
+			echo "Response redirecting to: {$location}\n";
 			if (!$location) { 
 				echo "WARN: Response Redirect Location could not be determined.\n";
 				print_r($response);
@@ -59,16 +59,21 @@ class CanonicalLink {
 			}
 			
 			if (!preg_match('/^\w+:/', $location)) {
-				//echo "WARN: Relative link in HTTP redirect Location: {$location}\n";
 				$relativeUrl = new HttpUrl($url);
 				$relativeUrl->setRelativeUrl($location);
 				$location = $relativeUrl->getUrl();
+
+				if ($location===$url) {
+					//echo "WARN: Relative link in HTTP redirect Location: {$location} from {$url}\n";
+					return NULL;
+				}
 			}
 			
 			// TODO: Keep following the redirection until we arrive at
 			//			a non-redirecting page
 			if ($follow) {
 				$newLocation = $this->getCanonicalLink($location, true, $depth++);
+	
 				if (!is_null($newLocation) && $newLocation!=$location) {
 					$location = $newLocation;
 				}

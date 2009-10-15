@@ -40,7 +40,7 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 ****/
 
 
-// ****
+/****
 	public function testNormalUrl() {
 		$url = 'http://www.isolani.co.uk/';
 		$canonUrl = $this->canon->getCanonicalLink($url);
@@ -256,18 +256,16 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($endUrl, $canonUrl);
 	}
-// ****/
+****/
 
 
 	
-// ****
 	public function testMultipleRedirectUrl() {
 		$url      = 'http://ping.fm/lzYNA';
 		$endUrl   = 'http://web.me.com/abrightman/DisabilityLand/';
 		$canonUrl = $this->canon->getCanonicalLink($url);
 		$this->assertEquals($endUrl, $canonUrl);
 	}
-// ****/
 
 	public function testLowerCaseLocationRedirect() {
 		//echo ucwords('link-farm');
@@ -279,6 +277,17 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		//echo "CanonURL link: {$canonUrl}\n";
 		$this->assertEquals($endUrl, $canonUrl);
 	}
+
+	
+	public function testRelativeInfiniteRedirect() {
+		$url      = "http://bit.ly/28RAOP";
+		$endUrl   = 'http://www.canadianarchitect.com/common_scripts/browse/default.asp?aid=1000208224';
+		//echo "Start link: {$url}\n";
+		$canonUrl = $this->canon->getCanonicalLink($url);
+		//echo "CanonURL link: {$canonUrl}\n";
+		$this->assertEquals($endUrl, $canonUrl);
+	}
+
 
 }
 
