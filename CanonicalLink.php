@@ -51,7 +51,7 @@ class CanonicalLink {
 			// Redirection taking place
 			//echo "Response: "; print_r($response);
 			$location = $response->getHeader('Location');
-			echo "Response redirecting to: {$location}\n";
+			//echo "Response redirecting to: {$location}\n";
 			if (!$location) { 
 				echo "WARN: Response Redirect Location could not be determined.\n";
 				print_r($response);
