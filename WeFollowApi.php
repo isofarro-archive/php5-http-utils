@@ -67,75 +67,27 @@ class WeFollowApi {
 		$pagedata = (object) NULL;
 		$pagedata->people = array();
 		
-		$tweeters = $dom->find('#column-main div.tweeters-list');
+		$tweeters = $dom->find('#results div.result_row');
 		if(!empty($tweeters)) {
 			foreach($tweeters as $tweeter) {
 				$person = (object) NULL;
 				//echo "Tweeter: {$tweeter->innertext}\n\n";
 
 				// Grab the twitter username				
-				$nameLink = $tweeter->find('h3 a.fn', 0);
+				$nameLink = $tweeter->find('.result_header strong a', 0);
 				$person->username = $nameLink->plaintext;
 				
-				// Grab the bio
-				$bioData  = $tweeter->find('p', 0);
-				if($bioData->plaintext) {
-					$person->bio      = $bioData->plaintext;
-				}
-				
 				// Grab the userimage
-				$imageData = $tweeter->find('img.user-image', 0);
+				$imageData = $tweeter->find('.result_thumbnail a img', 0);
 				$person->image = $imageData->src;
 				
 				// Followers
-				$followerData = $tweeter->find('.follower-number', 0);
+				$followerData = $tweeter->find('.follower_count', 0);
 				$followers = str_replace(',', '', $followerData->plaintext);
 				$person->followers = $followers;
-				
-				// Latest Tweet
-				$tweetInfo = $tweeter->find('.latest-tweet p', 0);
-				if ($tweetInfo->plaintext) {
-					$person->latestTweet = $tweetInfo->plaintext;
-				}
 
-				// Full name
-				$nameInfo = $tweeter->find('.other-details p', 0);
-				if ($nameInfo->plaintext) {
-					$person->fullname = $nameInfo->plaintext;
-				}
-				
-				// Website
-				//$siteInfo = $tweeter->find('.other-details a', 0);
-				//if ($siteInfo->href) {
-				//	$person->website = $siteInfo->href;
-				//}
-
-
-				
-				// Tags
-				$tagInfo = $tweeter->find('.other-details p a');
-				if (count($tagInfo)>0) {
-					$person->tags = array();
-					foreach($tagInfo as $tagLink) {
-						$person->tags[] = $tagLink->plaintext;
-					}
-				}
-
-				// Grab the rank
-				$rankInfo = $tweeter->find('.rank', 0);
-				if ($rankInfo->plaintext) {
-					$person->rank     = $rankInfo->plaintext;
-				}
-				
-				// Get follower change
-				$changeInfo = $tweeter->find('.new-follower-number', 0);
-				if ($changeInfo) {
-					$person->followerChange = $changeInfo->plaintext;
-				}
-			
-			
 				$pagedata->people[] = $person;
-
+				//print_r($person); break;
 			}		
 		}
 		
@@ -144,16 +96,16 @@ class WeFollowApi {
 		$pagedata->tag = $tagInfo->plaintext;
 
 		// Get the total number of followers
-		$totalInfo  = $dom->find('#column-main div.total-followers', 0);
+		$totalInfo  = $dom->find('#main_content span.user_count', 0);
 		if ($totalInfo->plaintext) {
-			if (preg_match('/tag: (\d+,?\d*)/', $totalInfo->plaintext, $matches)) {
+			if (preg_match('/^(\d+,?\d*)/', $totalInfo->plaintext, $matches)) {
 				$total = str_replace(',', '', $matches[1]);
 				$pagedata->totalFollowers = intval($total);
 			}
 		}
 		
 		// Get next and previous pages
-		$navInfo = $dom->find('#column-main a img.more-prev-btn');
+		$navInfo = $dom->find('#main_content a img.more-prev-btn');
 		foreach($navInfo as $navItem) {
 			$link = $navItem->parent->href;
 
@@ -218,6 +170,7 @@ class WeFollowApi {
 		if (empty($this->http)) {
 			$this->http = new HttpClient();
 		}
+		//echo "INFO: Getting URL: {$url}\n";
 		return $this->http->getUrl($url);
 	}
 	
