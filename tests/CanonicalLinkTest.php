@@ -259,7 +259,7 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 ****/
 
 
-	
+
 	public function testMultipleRedirectUrl() {
 		$url      = 'http://ping.fm/lzYNA';
 		$endUrl   = 'http://web.me.com/abrightman/DisabilityLand/';
@@ -288,6 +288,17 @@ class CanonicalLinkTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($endUrl, $canonUrl);
 	}
 
+	
+
+
+public function testRelativeInfiniteRedirect2() {
+	$url      = "http://ow.ly/uNQY";
+	$endUrl   = 'http://tadnet.org/news_posts';
+	//echo "Start link: {$url}\n";
+	$canonUrl = $this->canon->getCanonicalLink($url);
+	//echo "CanonURL link: {$canonUrl}\n";
+	$this->assertEquals($endUrl, $canonUrl);
+}
 
 }
 

@@ -29,7 +29,7 @@ class CanonicalLink {
 		//$this->config = $config;
 	}
 
-	public function getCanonicalLink($url, $follow=true, $depth=0) {
+	public function getCanonicalLink($url, $follow=true, $stack=array()) {
 		if (empty($this->lookup)) {
 			$this->_loadLookup();
 		}
@@ -56,6 +56,9 @@ class CanonicalLink {
 				echo "WARN: Response Redirect Location could not be determined.\n";
 				print_r($response);
 				return; 
+			} elseif (in_array($location, $stack)) {
+				echo "WARN: Circular redirect reference";
+				return $location;
 			}
 			
 			if (!preg_match('/^\w+:/', $location)) {
@@ -72,7 +75,8 @@ class CanonicalLink {
 			// TODO: Keep following the redirection until we arrive at
 			//			a non-redirecting page
 			if ($follow) {
-				$newLocation = $this->getCanonicalLink($location, true, $depth++);
+				$stack[] = $location;
+				$newLocation = $this->getCanonicalLink($location, true, $stack);
 	
 				if (!is_null($newLocation) && $newLocation!=$location) {
 					$location = $newLocation;
