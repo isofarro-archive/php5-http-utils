@@ -53,7 +53,7 @@ class CanonicalLink {
 			$location = $response->getHeader('Location');
 			//echo "Response redirecting to: {$location}\n";
 			if (!$location) { 
-				echo "WARN: Response Redirect Location could not be determined.\n";
+				echo "WARN: Response Redirect Location could not be determined.\n[{$url}]\n";
 				print_r($response);
 				return; 
 			} elseif (in_array($location, $stack)) {
